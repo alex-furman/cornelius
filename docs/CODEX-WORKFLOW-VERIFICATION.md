@@ -344,11 +344,25 @@ for those observations.
   upsert artifacts and real indexing were verified. After an operator interruption,
   native continuation checked the existing state and exact scoped lookup without
   replaying writes; all note hashes remained unchanged during that continuation.
-- Reference limits: fresh market writes exercised `ref-ingest`, not the complete
-  fresh-signal refresh orchestration. Reconcile exercised a literal-link repair,
-  not duplicate merge/delete or inbound-link rewrites. The non-Company scope
-  exercised reads, not generic-schema writes. Recovery resumed after writes;
-  no failure was injected between supersession's two writes.
+- Follow-up native reference checks used a fresh synthetic fixture. Generic
+  non-Company add/update preserved identity, creation metadata and history;
+  real indexing and nontracking mounted/default searches verified inclusion
+  and exclusion. Missing local settings were created from the documented
+  template before the add; existing notes were preserved.
+- Duplicate reconciliation required a revised proposal to include every edited
+  note's history, then a separate explicit approval. Actual digest checks and
+  a zero-inbound-link check preceded deletion; the three surviving records
+  exactly matched the reviewed proposal, with unrelated notes preserved.
+- Fresh-signal refresh consumed two supplied synthetic bulletins, corrected one
+  market fact and reconfirmed another, preserved reference provenance and
+  updated source/history, rebuilt the
+  index once, and left CRM records unchanged. The report matched the inputs.
+  This is supplied-signal orchestration, not external source retrieval.
+- Reference limits: these follow-up cases used Codex, not a fresh Claude replay.
+  Learning files remained absent, not populated-state preservation. Daemon
+  recovery demonstrated only temporary in-container health. No full reconcile
+  audit-report qualification or failure between supersession's two writes is
+  claimed; the earlier continuation inspected writes that had already finished.
 - Fresh installation commands and native setup reached a real search from a
   path containing spaces. Repeated index/graph operations preserved note bytes,
   curated tensions, dismissals and engine lifecycle values. The background
