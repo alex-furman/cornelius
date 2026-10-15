@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Twenty-five additional entries use the same canonical procedures. Their supported
+Twenty-six additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -68,6 +68,7 @@ runtime environment has been qualified.
 | `benchmark-memory` | Tiny workstation snapshot/search/scoring pipeline and one native delegated query-note judgment using existing metrics; no full sweep or enforced native tool isolation |
 | `ingest-source` | Local-text extraction with duplicate handling, actual index/graph/lifecycle updates and inspected continuation without replay; positive auto-link insertion and daemon health remain unqualified |
 | `test-memory-system` | Isolated diagnostic/report workflow with actual search and learning checks; confidence failures and untested efficacy/performance remain explicit |
+| `domain-watch` | Local baseline and later changed-note signal injected into an existing topic; no external surveillance, new-topic activation or scheduler qualification |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.

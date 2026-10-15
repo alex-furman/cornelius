@@ -27,6 +27,7 @@ SKILLS = {
     "update-dashboard", "brain-merge",
     "self-diagnostic", "benchmark-memory",
     "ingest-source", "test-memory-system",
+    "domain-watch",
 }
 
 
