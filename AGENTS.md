@@ -20,9 +20,12 @@ Use the shared memory, provenance and human-decision rules unchanged. References
 to Claude tools, model aliases, slash commands and plugins describe that runtime;
 use the Codex mechanics in `docs/CODEX.md`, never an automatic fallback to Claude.
 
-Only the skills listed in `docs/CODEX.md` are included in this Codex path. The
-shared manual also describes other workflows; explain their limitation instead
-of invoking them as if they were supported. For ordinary advice questions, load
+The skills listed in `docs/CODEX.md` include bounded verified workflows and
+dependency-conditional entries. Discovery is not proof that an external service
+or helper is installed. Check the listed prerequisites before their dependent
+phase; report missing capabilities and partial results accurately. Do not install
+services, substitute providers or bypass human decisions to complete a workflow.
+For ordinary advice questions, load
 `advise`; choices with options and stakes use `decide`, even when the user has
 not named a skill. Reference workflows use the scope and human-review rules in
 `docs/CODEX.md`; illustrative Company paths do not widen an explicit target.

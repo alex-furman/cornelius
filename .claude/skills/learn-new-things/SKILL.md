@@ -561,7 +561,16 @@ Display cycle summary:
 
 ## STEP 11: Schedule Next Cycle
 
-Set timer for next learning cycle:
+**Codex:** Completing one cycle does not schedule another. Use an existing,
+configured native or platform scheduling interface only when available and
+authorized, and require its successful confirmation before reporting the next
+cycle scheduled. Otherwise report the completed cycle and that continuation is
+unscheduled. Do not use a detached shell sleep or another provider CLI as a
+scheduler substitute. A confirmed schedule is not evidence that a future cycle
+has run; report actual delivery separately. Preserve the cycle's Git ownership,
+publication and human-decision gates on every later execution.
+
+**Claude Code timer path:** Set timer for next learning cycle:
 
 ```bash
 INTERVAL_HOURS=${1:-8}

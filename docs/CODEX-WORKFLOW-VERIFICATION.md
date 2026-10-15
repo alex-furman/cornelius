@@ -1,7 +1,7 @@
 # Codex workflow qualification
 
-This catalogue records bounded everyday-workflow qualification, not full runtime
-parity. The target is equivalent outcomes, approval boundaries, provenance and
+This catalogue records bounded runtime qualification and dependency-conditional
+invocation, not full end-to-end parity. The target is equivalent outcomes, approval boundaries, provenance and
 saved state under Claude Code and Codex. Generated wording need not match.
 The canonical procedures remain `.claude/skills/<name>/SKILL.md`; Codex reads
 them through relative discovery links. Follow [CODEX.md](CODEX.md) for runtime
@@ -51,10 +51,12 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, 28 advanced entries,
-six shared contracts and seven workflows without qualified discovery entries**.
-The 48 exposed entries have the bounded support described here and in
-[CODEX.md](CODEX.md); exposure does not establish full workflow parity.
+The inspected tree has **61 skills: 20 everyday entries, 29 advanced entries,
+six dependency-conditional entries and six shared contracts**.
+All 55 user-facing entries are discoverable. Of these, 49 have bounded execution
+evidence; the remaining six have the prerequisite limits described in
+[CODEX.md](CODEX.md). Exposure does not establish successful provider output,
+installation of missing helpers or full workflow parity.
 Shared contracts remain required reads rather
 than additional Codex discovery aliases:
 
@@ -68,16 +70,18 @@ than additional Codex discovery aliases:
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
 The following groups inventory all 35 workflows beyond the everyday entries.
-Exactly 28 now have discovery links: `dialectic`, `extract-document-insights`,
+Twenty-nine have bounded execution evidence: `dialectic`, `extract-document-insights`,
 `synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
 `scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
 `propagate-change`, `epub-chapter-extractor`, `multi-format-book-extractor`,
 `think-about-it`, `incubation-loop`, `ai-crystallize`, `update-changelog`,
 `manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard`, `brain-merge`,
 `self-diagnostic`, `benchmark-memory`, `ingest-source`, `test-memory-system`,
-`domain-watch`, `insight-interview` and `manage-watching-domains`.
-The other names remain dependencies or unqualified workflows; wrapper fixes
-alone do not expose them.
+`domain-watch`, `insight-interview`, `manage-watching-domains` and `auto-discovery`.
+The other six have dependency-conditional discovery links: `deep-research`,
+`learn-new-things`, `create-article`, `create-explanatory-image`,
+`nano-banana-image-generator` and `get-youtube-transcript`. Invocation adaptation
+and missing-prerequisite handling are not successful end-to-end qualification.
 
 | Advanced group | Complete skill inventory | Dependencies and consequential effects to qualify |
 | --- | --- | --- |
@@ -108,7 +112,7 @@ frontmatter is Claude configuration, not Codex permission enforcement.
 | `insight-extractor` | Required fresh child for everyday personal capture; notes, provenance and changelog artifacts |
 | `local-brain-search`, `connection-finder` | Native search/graph interfaces and any consuming workflow's read/write constraints |
 | `document-insight-extractor` | Bounded local-text capture with native extraction; see advanced workflow evidence below |
-| `auto-discovery`, `vault-manager` | Discovery and CRUD boundaries; no general specialist qualification |
+| `auto-discovery`, `vault-manager` | Bounded discovery skill execution and selected CRUD workflows; no general specialist qualification |
 | `thinking-partner` | Native conversation delegation and same-child continuation; see `talk` evidence below |
 | `research-specialist` | Web, Gemini and Apollo capabilities where configured; external dependency qualification pending |
 | `diagram-generator` | Chart MCP capabilities and image artifacts; external dependency qualification pending |
@@ -237,9 +241,17 @@ failure. They do not prove model adherence to authenticated approval. The
 native stale-review response contained an inaccurate explanatory diff context
 line; actual file reads, digest checks and refusal preserved the correct bytes.
 
-An `auto-discovery` manual check honestly reported a partial result: two of the
-canonical three required connections. This remains evidence of partial behavior,
-not positive workflow acceptance; no discovery alias is exposed.
+Two manual `auto-discovery` checks exercised scoped sampling, existing search
+and connections interfaces, actual scores, note reading and the canonical logs.
+The first found two supported connections. The second sampled four domains but
+reported no scored discoveries and recorded plausible unverified hypotheses.
+Only the permitted logs changed; source notes and index state were preserved.
+That second experiment prohibited threshold changes beyond what the canonical
+procedure requires, limiting candidate retrieval. It does not establish absence
+of meaningful relationships. These are bounded runtime and nonfabrication
+checks, not broad discovery-quality evidence. The skill requires diverse sampling;
+the separate specialist's three-discovery target is not a runtime compatibility
+criterion, and no finding should be invented to satisfy it.
 
 An `insight-interview` check used three actual turns: a grounded question,
 an answer requesting early closure, then an explicit save after the final
@@ -292,17 +304,28 @@ diagnosis and honest unavailable-dependency reporting, not successful retrieval
 for every query or an all-functions-pass diagnostic. No repairs, installations
 or external providers were exercised.
 
-Deterministic tests cover all 48 discovery links and the changed recipes;
-passing them is not full slice-two acceptance. The invocation-recipe tests
+Deterministic tests cover the discovery links and changed recipes;
+passing them is not full end-to-end acceptance. The invocation-recipe tests
 cover existing wrappers, paths with spaces, diagnostic directory preservation
 and the actual connections argument parser. Visible-error/stop behavior was
 tested under `bash -e`, not established as unconditional across every executor.
-Optional provider integrations and scheduler acceptance
-choices remain pending. Missing Drive-upload/transcript components, unconfigured
-chart or research services, and image/OCR credentials must remain explicit
-dependencies. Natural scheduled triggering, cancellation, restart and delivery
-require their own isolated platform experiment; manual runs do not substitute
-for those observations.
+Image recipes use the actual bundled Python argument parser with mocked HTTP:
+quoted values and visible missing-key/API failures are covered, not successful
+generation. Exact intermediate-file cleanup preserves unrelated paths; ownership
+and user selection remain instruction boundaries. Transcript invocation tests
+cover missing-helper refusal and quoted arguments through a fixture helper,
+not extraction from a real video.
+
+The compatibility scope preserves existing services without installing or
+rebuilding them. Missing Drive-upload/transcript components, unconfigured chart
+or research services, and image/OCR credentials remain explicit dependencies
+under both runtimes. The dependency-conditional entries use the same native
+Task/Skill/web mappings and retain original human/Git gates. No live research,
+image generation, article delivery or transcript success is claimed here.
+Natural scheduled triggering, restart and delivery require a separate platform
+qualification; manual runs do not substitute for those observations. Learning
+instructions distinguish the completed cycle from confirmed scheduling and do
+not translate Claude's background sleep into an invented Codex scheduler.
 
 ## Everyday baseline evidence and acceptance status
 

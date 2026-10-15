@@ -2,8 +2,10 @@
 
 Cornelius's Codex integration reuses the existing vault, search utilities and
 specialist instructions. Claude Code remains the default installation path.
-This opt-in integration exposes the qualified workflows below through shared skill
-directories. It does not claim parity with the full Claude skill catalog.
+This opt-in integration exposes 55 user-facing workflows through shared skill
+directories: 49 have bounded execution evidence and six are dependency-conditional.
+Six additional contracts are shared reads, not separate commands. Invocation
+compatibility does not establish full end-to-end parity for every workflow.
 See Verification for the tested boundaries and runtime-dependent capabilities.
 
 ## Everyday Workflows
@@ -37,7 +39,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Twenty-eight additional entries use the same canonical procedures. Their supported
+Twenty-nine additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -71,16 +73,38 @@ runtime environment has been qualified.
 | `domain-watch` | Local baseline and later changed-note signal injected into an existing topic; no external surveillance, new-topic activation or scheduler qualification |
 | `insight-interview` | Short interview with actual answers, explicit save, faithful transcript and native extraction into the holding area; not full interview-depth qualification |
 | `manage-watching-domains` | Proposal review, cancellation, separate approval for exact-proposal activation and unchanged repeat; broader management/recovery modes remain unqualified |
+| `auto-discovery` | Scoped sampling, actual score reporting and canonical session logs, including honest empty results; no minimum discovery count or broad quality claim |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.
 See the verification catalogue before relying on a wider boundary.
 
+## Dependency-conditional Workflows
+
+These six entries are discoverable and use the same runtime mappings below.
+They do not have successful end-to-end provider qualification in this contribution.
+Check the actual tool, helper, credentials and destination required by a phase
+before starting that phase; do not expose credential values. Missing prerequisites
+stop the dependent phase, not authorize installation, provider substitution,
+invented output or publication. Report any completed local work separately from
+unavailable delivery or continuation. Existing human decisions and Git gates apply.
+
+| Skill | Existing prerequisite and acceptance boundary |
+| --- | --- |
+| `deep-research` | Configured Gemini research MCP required by the research specialist; native web tools cover supplementary search. Apollo is conditional on B2B research. Native delegation/extraction mechanics have separate evidence; the live research pipeline is unverified. |
+| `learn-new-things` | Same research prerequisite plus the workflow's Git ownership rules. A completed cycle does not establish a scheduled next cycle; continuous operation needs an existing verified scheduling interface. |
+| `create-article` | Native search/file tools can execute local drafting. The referenced Drive upload helper and folder map are absent from the template; delivery requires an owner-configured implementation and verified destination. Local drafting is not Drive delivery. |
+| `nano-banana-image-generator` | Bundled Python helper, `requests`, and Gemini image credentials. Argument/failure handling is tested; successful provider output is not. |
+| `create-explanatory-image` | Same generation prerequisites plus native image viewing and the existing user selection gate. Do not claim visual inspection when viewing is unavailable. |
+| `get-youtube-transcript` | The referenced transcript wrapper and environment are absent from the template. Report the missing helper; no transcript extraction is qualified. |
+
+These dependencies also apply to Claude; switching runtimes neither supplies nor
+replaces them. Chart and ebook MCP specialist paths remain separately conditional;
+they are not prerequisites for the bundled image, EPUB or digital-PDF scripts.
+
 The `.agents/skills/` entries link to the canonical `.claude/skills/` directories.
-Do not edit a second copy of a skill. Other research/continuous-learning
-workflows, article/image production and Claude
-plugins remain outside the qualified discovery path. For those requests,
-explain the limitation; do not start another runtime. The optional workstation
+Do not edit a second copy of a skill or start another runtime. Claude plugins are
+not translated by this integration. The optional workstation
 benchmark CLI has separate bounded verification, not an in-agent CLI fallback.
 `decide` is available for choices with options and stakes. `canon-advise` is
 referenced by the shared instructions but is not shipped here: report that
@@ -163,6 +187,11 @@ do not suppress the error or broaden permissions automatically. Set the intended
 permission policy through the runtime's normal controls before write workflows.
 The `allowed-tools` metadata names Claude tools and is not Codex enforcement.
 Use the native file, shell and MCP tools actually exposed by the installed CLI.
+`WebSearch` and `WebFetch` mean the exposed native search and page-reading tools.
+For named MCP calls, use the configured service with the same operation contract;
+a similar tool name or another provider is not an automatic substitute. Report
+an unavailable service before its dependent phase, preserving earlier artifacts
+and identifying what remains incomplete.
 
 ## Specialist Delegation
 

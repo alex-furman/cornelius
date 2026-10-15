@@ -21,11 +21,11 @@ Trinity supplies what a compounding brain needs and a laptop does not: always-on
 
 Cornelius works standalone in Claude Code for exploration and development. **It is meant to be run on Trinity** - see [Deploy to Trinity](#recommended-deploy-to-trinity-for-autonomous-operation) below.
 
-**Using Codex?** An opt-in integration for everyday memory, decisions,
-reference data and selected advanced workflows is described in
-[Codex Support](docs/CODEX.md), including verification and runtime-dependent
-limits. Claude Code remains the default; the wider feature catalog below is
-not a claim of full Codex parity.
+**Using Codex?** The opt-in integration shares the canonical workflows: 49 have
+bounded execution evidence and six additional entries require separately
+configured services or helpers. See [Codex Support](docs/CODEX.md) for setup,
+verification and the exact limits. Claude Code remains the default; discovery
+does not establish full end-to-end parity or supply missing integrations.
 
 ![How Cornelius works - animated architecture explainer](docs/cornelius-explainer.gif)
 

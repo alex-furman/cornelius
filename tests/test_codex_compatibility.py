@@ -30,6 +30,9 @@ SKILLS = {
     "domain-watch",
     "insight-interview",
     "manage-watching-domains",
+    "auto-discovery", "deep-research", "learn-new-things", "create-article",
+    "create-explanatory-image", "nano-banana-image-generator",
+    "get-youtube-transcript",
 }
 
 

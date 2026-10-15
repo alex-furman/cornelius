@@ -23,10 +23,20 @@ Extract a full transcript from any YouTube video using the local youtube-transcr
 
 ### Step 1: Extract the transcript
 
-Run the wrapper script with the URL or video ID the user provided:
+The wrapper and its venv are not included in this template. Use an existing
+configured installation at the documented path; otherwise report the missing
+dependency, not a successful transcript. Do not invent a replacement wrapper
+or silently switch providers.
+
+Run from the repository root. Set `video_url` to the URL or video ID the user
+provided, passing it as quoted data rather than interpolating it into shell code:
 
 ```bash
-$PROJECT_ROOT/scripts/utilities/yt-transcript.sh "<url-or-id>"
+if [ ! -x "scripts/utilities/yt-transcript.sh" ]; then
+    printf '%s\n' 'Transcript helper unavailable: scripts/utilities/yt-transcript.sh' >&2
+    exit 1
+fi
+"scripts/utilities/yt-transcript.sh" "$video_url"
 ```
 
 Options:
@@ -50,8 +60,12 @@ Return the full transcript text to the user. If it's long (>500 lines), summariz
 User: "get me the transcript of https://youtu.be/abc123"
 
 ```bash
-$PROJECT_ROOT/scripts/utilities/yt-transcript.sh "https://youtu.be/abc123"
+"scripts/utilities/yt-transcript.sh" "https://youtu.be/abc123"
 ```
+
+This example assumes Step 1's dependency check passed. An installed helper's
+missing venv or other execution failure must also be reported; path availability
+alone does not establish successful extraction.
 
 ## Notes
 

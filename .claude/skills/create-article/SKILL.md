@@ -156,6 +156,14 @@ python3 .claude/scripts/google/google_drive.py upload-folder "Brain/04-Output/Ar
 
 **Google Drive folder IDs**: See `.claude/resources/google_drive_folders.md`
 
+If the upload helper, folder map or configured Drive access is unavailable,
+preserve the local article artifacts and report upload incomplete with the
+missing dependency. Local draft/metadata/index completion is separate from
+Drive delivery; do not claim an upload, substitute a destination or construct
+a replacement uploader to make this step appear complete.
+The template's folder ID is not authorization to upload: verify the configured
+destination and the user's authorization before any external write.
+
 - `Articles/cornelius_drafts` folder ID: `1fxxbEwS86gguYXA1hJsFesr13ruXx80S`
 - This puts the article where the user and a content agent can access it for review and publishing
 - The folder preserves the same structure as the local article folder
@@ -230,7 +238,8 @@ Adjust content based on target platform:
 
 ## Content-Agent Integration
 
-This skill can be called headlessly by content agent for content production:
+**External Claude Code workstation invocation:** This skill can be called
+headlessly by a content agent for content production:
 
 ```bash
 cd $PROJECT_ROOT
@@ -241,6 +250,13 @@ claude -p "/create-article <topic> for <platform>" --output-format json
 > authenticated Claude Code CLI. A caller running **inside a Trinity container cannot use `claude -p`**
 > (turn-scoped credentials, plus the ent#643 no-CLI-subprocess rule); it must call
 > `chat_with_agent("cornelius", "...")` over Trinity MCP instead.
+
+**Codex:** Within an agent turn, read and follow this canonical skill using the
+native Skill/child-agent mapping in `docs/CODEX.md`; do not launch `claude -p`
+or another provider CLI. An existing Trinity `chat_with_agent` route may be
+used only when that tool is actually configured and available. Report a missing
+required delegation interface rather than pretending a remote agent completed
+the work. Preserve the content-agent response contract below.
 
 **Response format for a content agent:**
 ```json
@@ -265,10 +281,10 @@ When called by a content agent:
 
 All articles go to: `Brain/04-Output/Articles/[article-name]/`
 
-After creation, open the folder:
-```bash
-open "Brain/04-Output/Articles/[article-name]/"
-```
+After creation, report the absolute article-folder and artifact paths. Opening
+a desktop folder is optional when requested (`open` on macOS, `xdg-open` where
+available on Linux); headless environments require neither command. Report
+local artifact completion and Drive upload status separately.
 
 ## Completion Checklist
 
@@ -281,4 +297,4 @@ open "Brain/04-Output/Articles/[article-name]/"
 - [ ] _metadata.md created with source insights, external voices, and thinking process
 - [ ] Article Index updated with new entry (date, topic, status)
 - [ ] Article folder uploaded to Google Drive `Articles/cornelius_drafts`
-- [ ] Article folder opened in Finder for user review
+- [ ] Absolute article paths provided for review; any incomplete Drive delivery reported separately
