@@ -51,9 +51,9 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, 26 advanced entries,
-six shared contracts and nine workflows without qualified discovery entries**.
-The 46 exposed entries have the bounded support described here and in
+The inspected tree has **61 skills: 20 everyday entries, 28 advanced entries,
+six shared contracts and seven workflows without qualified discovery entries**.
+The 48 exposed entries have the bounded support described here and in
 [CODEX.md](CODEX.md); exposure does not establish full workflow parity.
 Shared contracts remain required reads rather
 than additional Codex discovery aliases:
@@ -68,14 +68,14 @@ than additional Codex discovery aliases:
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
 The following groups inventory all 35 workflows beyond the everyday entries.
-Exactly 26 now have discovery links: `dialectic`, `extract-document-insights`,
+Exactly 28 now have discovery links: `dialectic`, `extract-document-insights`,
 `synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
 `scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
 `propagate-change`, `epub-chapter-extractor`, `multi-format-book-extractor`,
 `think-about-it`, `incubation-loop`, `ai-crystallize`, `update-changelog`,
 `manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard`, `brain-merge`,
-`self-diagnostic`, `benchmark-memory`, `ingest-source`, `test-memory-system`
-and `domain-watch`.
+`self-diagnostic`, `benchmark-memory`, `ingest-source`, `test-memory-system`,
+`domain-watch`, `insight-interview` and `manage-watching-domains`.
 The other names remain dependencies or unqualified workflows; wrapper fixes
 alone do not expose them.
 
@@ -227,13 +227,26 @@ a clean official-image startup test.
 | `integrate-recent-notes` | Native seven-note assessment matched actual unique-neighbor counts: six well-connected and one partially connected; only the canonical report was added, with existing notes and learning-state hashes unchanged | Report-only suggestions, not automatic linking or source-note edits; no isolated-note positive case in this fixture |
 | `update-dashboard` | Native output at the intended Trinity path matched all 17 supplied numeric values, signed/zero trends and report date; missing metrics and narrative remained unavailable. Official validator accepted every widget; source hashes stayed unchanged | Read-only synthetic input mount and explicit no-invention constraints. No frontend rendering/API delivery or alternate output-root qualification |
 | `brain-merge` | Native preview preserved files; later exact-file approval copied unchanged provenance/content, indexed only the target and preserved pre-existing files. Repeat changed nothing | Read-only source mount and explicit scope constraints. No reverse/bidirectional merge, stale-preview refusal, symlink/race defense, batch recovery, post-index search or graph-bootstrap qualification |
-| `domain-watch` | Local baseline recorded four matches. A later synthetic HIGH signal found through the changed-note path was injected into an existing active topic; source notes and learning state stayed unchanged | Semantic retrieval missed the new note, explicitly reported. No external surveillance, new-topic activation, repeat suppression or scheduler qualification; manager remains unexposed |
+| `domain-watch` | Local baseline recorded four matches. A later synthetic HIGH signal found through the changed-note path was injected into an existing active topic; source notes and learning state stayed unchanged | Semantic retrieval missed the new note, explicitly reported. No external surveillance, new-topic activation, repeat suppression or scheduler qualification |
+| `manage-watching-domains` | Review and cancellation preserved state; separate approval activated one exact proposal across four canonical artifacts, preserving prior history. Repeat wrote nothing | No deliberately stale/occupied-target refusal, interrupted-write recovery, pause/update or scheduled activation qualification |
 
 Deterministic Git recipe tests cover clean/dirty starts, rebase conflicts,
 literal filenames, selected staging and preserved local commits after push
 failure. They do not prove model adherence to authenticated approval. The
 native stale-review response contained an inaccurate explanatory diff context
 line; actual file reads, digest checks and refusal preserved the correct bytes.
+
+An `auto-discovery` manual check honestly reported a partial result: two of the
+canonical three required connections. This remains evidence of partial behavior,
+not positive workflow acceptance; no discovery alias is exposed.
+
+An `insight-interview` check used three actual turns: a grounded question,
+an answer requesting early closure, then an explicit save after the final
+question. The faithful transcript and fresh native extractor produced one
+unendorsed synthetic holding-area note; original notes and Q-values stayed
+unchanged, while tracked searches updated usage history as expected. This does
+not qualify a full six-to-ten-turn interview, positive duplicate rejection or
+index refresh. Generated model labels are not runtime-identity evidence.
 
 Local-text `ingest-source` qualification produced one new encountered note and
 skipped one duplicate. Actual indexing, graph enrichment and lifecycle updates
@@ -278,7 +291,7 @@ diagnosis and honest unavailable-dependency reporting, not successful retrieval
 for every query or an all-functions-pass diagnostic. No repairs, installations
 or external providers were exercised.
 
-Deterministic tests cover all 46 discovery links and the changed recipes;
+Deterministic tests cover all 48 discovery links and the changed recipes;
 passing them is not full slice-two acceptance. The invocation-recipe tests
 cover existing wrappers, paths with spaces, diagnostic directory preservation
 and the actual connections argument parser. Visible-error/stop behavior was

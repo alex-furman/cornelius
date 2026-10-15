@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Twenty-six additional entries use the same canonical procedures. Their supported
+Twenty-eight additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -69,6 +69,8 @@ runtime environment has been qualified.
 | `ingest-source` | Local-text extraction with duplicate handling, actual index/graph/lifecycle updates and inspected continuation without replay; positive auto-link insertion and daemon health remain unqualified |
 | `test-memory-system` | Isolated diagnostic/report workflow with actual search and learning checks; confidence failures and untested efficacy/performance remain explicit |
 | `domain-watch` | Local baseline and later changed-note signal injected into an existing topic; no external surveillance, new-topic activation or scheduler qualification |
+| `insight-interview` | Short interview with actual answers, explicit save, faithful transcript and native extraction into the holding area; not full interview-depth qualification |
+| `manage-watching-domains` | Proposal review, cancellation, separate approval for exact-proposal activation and unchanged repeat; broader management/recovery modes remain unqualified |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.

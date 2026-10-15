@@ -28,6 +28,8 @@ SKILLS = {
     "self-diagnostic", "benchmark-memory",
     "ingest-source", "test-memory-system",
     "domain-watch",
+    "insight-interview",
+    "manage-watching-domains",
 }
 
 
