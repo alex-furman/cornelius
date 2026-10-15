@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Twenty-one additional entries use the same canonical procedures. Their supported
+Twenty-three additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -64,6 +64,8 @@ runtime environment has been qualified.
 | `integrate-recent-notes` | Report-only integration assessment using actual connection counts, without editing source notes |
 | `update-dashboard` | Report-derived metrics at Trinity’s `/home/developer/dashboard.yaml` path, with unavailable values identified |
 | `brain-merge` | Reviewed exact-file pull into a selected target, target indexing and unchanged repeat |
+| `self-diagnostic` | Read-only diagnosis with supported nontracking commands and honest missing-dependency reporting; not an all-functions-pass result |
+| `benchmark-memory` | Tiny workstation snapshot/search/scoring pipeline and one native delegated query-note judgment using existing metrics; no full sweep or enforced native tool isolation |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.
@@ -71,7 +73,7 @@ See the verification catalogue before relying on a wider boundary.
 
 The `.agents/skills/` entries link to the canonical `.claude/skills/` directories.
 Do not edit a second copy of a skill. Other research/continuous-learning
-workflows, article/image production, benchmarking inside an agent and Claude
+workflows, article/image production and Claude
 plugins remain outside the qualified discovery path. For those requests,
 explain the limitation; do not start another runtime. The optional workstation
 benchmark CLI has separate bounded verification, not an in-agent CLI fallback.

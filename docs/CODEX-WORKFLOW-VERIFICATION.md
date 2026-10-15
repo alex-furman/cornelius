@@ -51,9 +51,9 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, 21 advanced entries,
-six shared contracts and 14 workflows without qualified discovery entries**.
-The 41 exposed entries have the bounded support described here and in
+The inspected tree has **61 skills: 20 everyday entries, 23 advanced entries,
+six shared contracts and 12 workflows without qualified discovery entries**.
+The 43 exposed entries have the bounded support described here and in
 [CODEX.md](CODEX.md); exposure does not establish full workflow parity.
 Shared contracts remain required reads rather
 than additional Codex discovery aliases:
@@ -68,12 +68,13 @@ than additional Codex discovery aliases:
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
 The following groups inventory all 35 workflows beyond the everyday entries.
-Exactly 21 now have discovery links: `dialectic`, `extract-document-insights`,
+Exactly 23 now have discovery links: `dialectic`, `extract-document-insights`,
 `synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
 `scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
 `propagate-change`, `epub-chapter-extractor`, `multi-format-book-extractor`,
 `think-about-it`, `incubation-loop`, `ai-crystallize`, `update-changelog`,
-`manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard` and `brain-merge`.
+`manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard`, `brain-merge`,
+`self-diagnostic` and `benchmark-memory`.
 The other names remain dependencies or unqualified workflows; wrapper fixes
 alone do not expose them.
 
@@ -242,10 +243,22 @@ tests cover defaults, output parsing and failures. A separate tiny end-to-end
 workstation run used an actual snapshot and search, scored one returned note,
 and produced one CSV row with existing metrics. Offline resume skipped that
 completed configuration/query and preserved the CSV. This does not qualify a
-large sweep, empirical ranking quality or native in-agent judging; future CLI versions
-and administrator-managed configurations require their own capability checks.
+large sweep or empirical ranking quality. A separate native check delegated one
+synthetic query-note pair to a fresh child, validated its literal JSON score and
+used the existing metrics functions. The child made no tool calls; this was
+observed behavior, not enforced native tool isolation. All fixture file hashes
+were preserved. Future CLI versions and administrator-managed configurations
+require their own capability checks.
 
-Deterministic tests cover all 41 discovery links and the changed recipes;
+For `self-diagnostic`, the corrected command regression preserved all fixture
+file hashes, including learning state. Subshell dependency checks preserved the
+working directory; nontracking search returned valid empty results, and the
+supported connections stats/hubs commands succeeded. This qualifies read-only
+diagnosis and honest unavailable-dependency reporting, not successful retrieval
+for every query or an all-functions-pass diagnostic. No repairs, installations
+or external providers were exercised.
+
+Deterministic tests cover all 43 discovery links and the changed recipes;
 passing them is not full slice-two acceptance. The invocation-recipe tests
 cover existing wrappers, paths with spaces, diagnostic directory preservation
 and the actual connections argument parser. Visible-error/stop behavior was

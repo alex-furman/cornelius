@@ -25,6 +25,7 @@ SKILLS = {
     "manage-thinking-topics",
     "integrate-recent-notes",
     "update-dashboard", "brain-merge",
+    "self-diagnostic", "benchmark-memory",
 }
 
 
