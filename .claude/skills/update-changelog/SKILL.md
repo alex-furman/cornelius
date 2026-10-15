@@ -15,7 +15,7 @@ You are updating the Brain vault changelog to track recent modifications to the 
    - Significant edits to note content
    - Focus only on changes made during THIS session
 
-2. **Read Existing Changelog** - Read `$VAULT_BASE_PATH/Brain/CHANGELOG.md` to see the current state
+2. **Read Existing Changelog** - Read `$VAULT_BASE_PATH/CHANGELOG.md` to see the current state. The configured value is already the note root (default `./Brain`); do not append another `Brain` directory.
 
 3. **Append New Entry** - Add a new dated entry at the TOP of the changelog with:
    - Date and session identifier

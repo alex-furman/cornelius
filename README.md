@@ -21,8 +21,8 @@ Trinity supplies what a compounding brain needs and a laptop does not: always-on
 
 Cornelius works standalone in Claude Code for exploration and development. **It is meant to be run on Trinity** - see [Deploy to Trinity](#recommended-deploy-to-trinity-for-autonomous-operation) below.
 
-**Using Codex?** An opt-in integration for everyday memory, decisions and
-reference workflows is described in
+**Using Codex?** An opt-in integration for everyday memory, decisions,
+reference data and selected advanced workflows is described in
 [Codex Support](docs/CODEX.md), including verification and runtime-dependent
 limits. Claude Code remains the default; the wider feature catalog below is
 not a claim of full Codex parity.

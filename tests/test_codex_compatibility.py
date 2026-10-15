@@ -20,6 +20,8 @@ SKILLS = {
     "get-perspective-on", "talk", "git-commit-push", "scheduled-run",
     "coherence-sweep", "compute-lifecycle", "detect-tensions", "propagate-change",
     "epub-chapter-extractor", "multi-format-book-extractor",
+    "ai-crystallize", "think-about-it", "incubation-loop",
+    "update-changelog",
 }
 
 

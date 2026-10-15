@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Thirteen additional entries use the same canonical procedures. Their supported
+Seventeen additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -56,9 +56,13 @@ runtime environment has been qualified.
 | `propagate-change` | Existing graph propagation and derived staleness updates |
 | `epub-chapter-extractor` | Local EPUB extraction using the bundled script and installed dependencies |
 | `multi-format-book-extractor` | Digital PDF extraction; OCR and Calibre formats require separately verified dependencies |
+| `think-about-it` | Bounded freeform perspective pass; no automatic endorsement |
+| `incubation-loop` | One analytical move on a seeded topic, preserving uncertainty and human endorsement boundaries |
+| `ai-crystallize` | Segregated `ai-inferred` draft from an already-converged topic, with repeat-run deduplication and source state preserved |
+| `update-changelog` | Session-scoped changelog at the configured vault root, preserving prior text |
 
 Natural scheduler delivery, production writer serialization, positive graph
-finding quality and all document formats are not established by these checks.
+finding quality, full multi-cycle convergence and all document formats are not established by these checks.
 See the verification catalogue before relying on a wider boundary.
 
 The `.agents/skills/` entries link to the canonical `.claude/skills/` directories.
