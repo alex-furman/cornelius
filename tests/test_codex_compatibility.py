@@ -26,6 +26,7 @@ SKILLS = {
     "integrate-recent-notes",
     "update-dashboard", "brain-merge",
     "self-diagnostic", "benchmark-memory",
+    "ingest-source", "test-memory-system",
 }
 
 

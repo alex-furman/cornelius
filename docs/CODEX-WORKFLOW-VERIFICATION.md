@@ -51,9 +51,9 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, 23 advanced entries,
-six shared contracts and 12 workflows without qualified discovery entries**.
-The 43 exposed entries have the bounded support described here and in
+The inspected tree has **61 skills: 20 everyday entries, 25 advanced entries,
+six shared contracts and 10 workflows without qualified discovery entries**.
+The 45 exposed entries have the bounded support described here and in
 [CODEX.md](CODEX.md); exposure does not establish full workflow parity.
 Shared contracts remain required reads rather
 than additional Codex discovery aliases:
@@ -68,13 +68,13 @@ than additional Codex discovery aliases:
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
 The following groups inventory all 35 workflows beyond the everyday entries.
-Exactly 23 now have discovery links: `dialectic`, `extract-document-insights`,
+Exactly 25 now have discovery links: `dialectic`, `extract-document-insights`,
 `synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
 `scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
 `propagate-change`, `epub-chapter-extractor`, `multi-format-book-extractor`,
 `think-about-it`, `incubation-loop`, `ai-crystallize`, `update-changelog`,
 `manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard`, `brain-merge`,
-`self-diagnostic` and `benchmark-memory`.
+`self-diagnostic`, `benchmark-memory`, `ingest-source` and `test-memory-system`.
 The other names remain dependencies or unqualified workflows; wrapper fixes
 alone do not expose them.
 
@@ -234,6 +234,25 @@ failure. They do not prove model adherence to authenticated approval. The
 native stale-review response contained an inaccurate explanatory diff context
 line; actual file reads, digest checks and refusal preserved the correct bytes.
 
+Local-text `ingest-source` qualification produced one new encountered note and
+skipped one duplicate. Actual indexing, graph enrichment and lifecycle updates
+completed; inspected continuation reconciled existing artifacts without
+re-extraction, and earlier repeat ingestion deduplicated. Prior note bodies and
+log/ledger prefixes were preserved. Eligible connection scores were all below
+the threshold, so no automatic links were added; positive insertion and its cap
+remain unexercised. CLI fallback worked after the daemon became defunct; this
+does not qualify persistent daemon health or autonomous interruption recovery.
+
+An isolated `test-memory-system` run exercised actual intent labels, search,
+tracking, read feedback, activation changes and nontracking preservation.
+Continuation retained the learning state without replay; a report-only
+correction reconciled all ten completed timing samples from saved output.
+Three historical confidence thresholds failed and remain reported. Concurrent
+cold CLI timings do not establish latency; the small fixture does not qualify
+diversity, hub inhibition, positive rank movement or broad memory efficacy.
+Strict no-Git compliance is not claimed. This is bounded diagnostic/report
+qualification, not an all-tests-pass result.
+
 The workstation Codex benchmark path passed independent review and one live
 synthetic scoring request, returning a valid score even when the excerpt
 contained an instruction to read files. Separate offline request capture
@@ -258,7 +277,7 @@ diagnosis and honest unavailable-dependency reporting, not successful retrieval
 for every query or an all-functions-pass diagnostic. No repairs, installations
 or external providers were exercised.
 
-Deterministic tests cover all 43 discovery links and the changed recipes;
+Deterministic tests cover all 45 discovery links and the changed recipes;
 passing them is not full slice-two acceptance. The invocation-recipe tests
 cover existing wrappers, paths with spaces, diagnostic directory preservation
 and the actual connections argument parser. Visible-error/stop behavior was

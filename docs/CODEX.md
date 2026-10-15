@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Twenty-three additional entries use the same canonical procedures. Their supported
+Twenty-five additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -66,6 +66,8 @@ runtime environment has been qualified.
 | `brain-merge` | Reviewed exact-file pull into a selected target, target indexing and unchanged repeat |
 | `self-diagnostic` | Read-only diagnosis with supported nontracking commands and honest missing-dependency reporting; not an all-functions-pass result |
 | `benchmark-memory` | Tiny workstation snapshot/search/scoring pipeline and one native delegated query-note judgment using existing metrics; no full sweep or enforced native tool isolation |
+| `ingest-source` | Local-text extraction with duplicate handling, actual index/graph/lifecycle updates and inspected continuation without replay; positive auto-link insertion and daemon health remain unqualified |
+| `test-memory-system` | Isolated diagnostic/report workflow with actual search and learning checks; confidence failures and untested efficacy/performance remain explicit |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.
@@ -189,6 +191,12 @@ parts and the failed dependency without synthesizing a substitute success.
 On cancellation, stop active children using the runtime's native controls and
 inspect existing artifacts before any later continuation. Preserve partial work
 without promoting it into endorsed memory or blindly replaying writes.
+
+Shell commands can also return a running session before they finish. Collect
+that session's final output before reporting the phase as complete or incomplete.
+Use the completed result, not an earlier partial output, for counts and metrics.
+If a command is still running at interruption, preserve its state and inspect
+its result before retrying a write.
 
 For `talk`, wait for the thinking partner and relay its completed response in
 the same parent turn; this does not require tool calls and prose to occupy one
