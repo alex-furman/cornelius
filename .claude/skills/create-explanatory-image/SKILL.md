@@ -28,7 +28,8 @@ Generate explanatory diagrams and infographics that clearly communicate a concep
 
 ## Prerequisites
 
-- `GOOGLE_API_KEY` or `GEMINI_API_KEY` set in `.env`
+- `GOOGLE_API_KEY` or `GEMINI_API_KEY` available through the script's existing environment or `.env` lookup
+- Python with `requests` installed; run commands from the repository root
 - Nano Banana image generator scripts available at `.claude/skills/nano-banana-image-generator/scripts/`
 
 ## Inputs
@@ -52,7 +53,9 @@ Generate explanatory diagrams and infographics that clearly communicate a concep
 2. Confirm output folder:
    - If user specified a folder, use it
    - Otherwise, create: `[concept_slug]_diagrams/` in current directory
-   - `mkdir -p [folder]`
+   - Set `image_folder` to the chosen path and use `mkdir -p -- "$image_folder"`
+   - Keep an exact list of intermediate files created by this execution; choose
+     unused paths so an earlier run's image is not overwritten
 
 ### Step 2: Decompose the Concept
 
@@ -111,11 +114,17 @@ Generate the specified number of variants (default 3), each taking a slightly di
    - Specify layout positioning explicitly
    - Request "generous spacing" and "clean minimal design"
 
-2. Generate using the Python script (handles JSON escaping properly):
+2. Generate using the Python script (handles JSON escaping properly). Set
+   `image_prompt`, `image_output` and `image_ratio` to this variant's prompt,
+   unused output-file path and aspect ratio. Supply values as quoted data,
+   never interpolate user text into executable shell code:
    ```bash
-   python3 .claude/skills/nano-banana-image-generator/scripts/generate_image.py "[prompt]" /tmp/[concept]_v[N].png --aspect-ratio [ratio]
+   python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "$image_prompt" "$image_output" --aspect-ratio "$image_ratio"
    ```
    **Important**: Use the Python script, not the bash script, to avoid JSON escaping issues with quotes in prompts.
+   Check the actual output file before proceeding. Missing dependencies,
+   credentials or a failed response leave generation incomplete; do not
+   substitute another provider or treat an old file as this run's result.
 
 3. Wait 2 seconds between API calls to avoid rate limits:
    ```bash
@@ -126,7 +135,9 @@ Generate the specified number of variants (default 3), each taking a slightly di
 
 **For each generated image, run this analysis cycle. This is the core differentiator of this skill.**
 
-1. **View the image**: Use the Read tool on the PNG file to visually inspect it
+1. **View the image**: In Claude Code, use Read on the PNG. In Codex, use the
+   exposed native image viewer. If image viewing is unavailable, report the
+   limitation; do not claim the self-critique passed from a filename or exit code.
 
 2. **Check for issues** against this checklist:
    - [ ] **Title text**: Is it spelled correctly and readable?
@@ -176,22 +187,29 @@ If user requests changes:
 
 ### Step 7: Finalize and Cleanup
 
-1. **Copy final images** to the output folder with clean names:
+1. **Copy the user-selected final images** to the output folder with clean names.
+   Set `best_image` and `final_image` to the exact source and destination paths;
+   confirm the destination is unused or its replacement was approved:
    ```bash
-   cp /tmp/[best_version].png [output_folder]/[concept_name].png
+   cp -- "$best_image" "$final_image"
    ```
 
-2. **Delete intermediate files** from /tmp:
+2. After verifying the final copies, **delete only the exact intermediate files
+   created by this execution**. Populate `intermediate_images` with those
+   reviewed paths, excluding final outputs and all pre-existing files:
    ```bash
-   rm /tmp/[concept]_v*.png
+   if [ "${#intermediate_images[@]}" -gt 0 ]; then
+       rm -- "${intermediate_images[@]}"
+   fi
    ```
 
-3. **Keep only final versions** in the output folder. Delete any intermediate copies.
+3. Preserve unrelated or pre-existing files in the output folder. If an
+   intermediate file's ownership is uncertain, retain it and report its path.
 
-4. **Open the output folder** for the user:
-   ```bash
-   open [output_folder]
-   ```
+4. Report the absolute output paths and display the final images through the
+   runtime's available interface. Opening a desktop folder is optional when
+   requested (`open` on macOS, `xdg-open` where available on Linux); headless
+   environments require neither command.
 
 ### Step 8: Write Completion Summary
 
@@ -211,7 +229,7 @@ Report:
 ## Outputs
 
 - Final explanatory images in the output folder
-- All intermediate files cleaned up
+- This execution's verified intermediate files cleaned up; any retained files reported
 
 ## Error Recovery
 
@@ -231,8 +249,8 @@ Report:
 - [ ] Each variant self-critiqued for text accuracy and logical correctness
 - [ ] Best candidates presented and approved by user
 - [ ] Final images saved to output folder with clean names
-- [ ] Intermediate files deleted
-- [ ] Output folder opened for user
+- [ ] Only this execution's verified intermediate files deleted; retained files reported
+- [ ] Absolute output paths provided and final images displayed when supported
 
 ## Style Reference
 

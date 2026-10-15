@@ -12,30 +12,43 @@ Generate images using Google's Gemini 2.5 Flash Image model (codename: Nano Bana
 
 | Source | Location | Read | Write | Description |
 |--------|----------|------|-------|-------------|
-| Generate Script | `~/.claude/skills/nano-banana-image-generator/scripts/generate.sh` | ✓ | | Main generation script |
-| Thumbnail Script | `~/.claude/skills/nano-banana-image-generator/scripts/generate_thumbnail.py` | ✓ | | 16:9 thumbnail generator |
-| Image Script | `~/.claude/skills/nano-banana-image-generator/scripts/generate_image.py` | ✓ | | Python with aspect ratio control |
-| Best Practices | `~/.claude/skills/nano-banana-image-generator/best_practices.md` | ✓ | | Prompt engineering guidelines |
+| Generate Script | `.claude/skills/nano-banana-image-generator/scripts/generate.sh` | ✓ | | Shell helper |
+| Thumbnail Script | `.claude/skills/nano-banana-image-generator/scripts/generate_thumbnail.py` | ✓ | | 16:9 thumbnail generator |
+| Image Script | `.claude/skills/nano-banana-image-generator/scripts/generate_image.py` | ✓ | | Python with aspect ratio control |
+| Best Practices | `.claude/skills/nano-banana-image-generator/best_practices.md` | ✓ | | Prompt engineering guidelines |
 | API Key | `$GOOGLE_API_KEY` or `$GEMINI_API_KEY` | ✓ | | Required for API access |
 | Output Directory | `$OUTPUT_DIR` or current directory | | ✓ | Where images are saved |
 | Generated Image | User-specified path | | ✓ | Output PNG file |
 
 ## Quick Start
 
-**Generate a simple image:**
+Run from the repository root with Python and `requests` already installed.
+Use the bundled Python generator for prompts containing quotes; it serializes
+JSON correctly. A separate `~/.claude/skills` installation is not required.
+Set `image_prompt`, `image_output` and `image_ratio` to the requested prompt,
+output-file path and aspect ratio, respectively, using quoted data rather than
+interpolating user text into shell code. Then run:
+
 ```bash
-bash ~/.claude/skills/nano-banana-image-generator/scripts/generate.sh "A red apple on white background" apple.png
+python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "$image_prompt" "$image_output" --aspect-ratio "$image_ratio"
 ```
 
 **Generate a 16:9 thumbnail:**
 ```bash
-python3 ~/.claude/skills/nano-banana-image-generator/scripts/generate_thumbnail.py "YouTube thumbnail showing AI agents" /tmp/thumb.png
+python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "YouTube thumbnail showing AI agents" "/tmp/thumb.png" --aspect-ratio "16:9"
 ```
 
 **Generate with custom output directory:**
 ```bash
-OUTPUT_DIR=/tmp bash ~/.claude/skills/nano-banana-image-generator/scripts/generate.sh "Sunset over mountains" sunset.png
+python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "Sunset over mountains" "/tmp/output images/sunset.png"
 ```
+
+Report missing dependencies or credentials without claiming generation. After
+each call, inspect the actual output image before reporting success; a zero exit
+status alone is insufficient (the legacy thumbnail helper can exit zero after
+an API failure). In Codex, use the exposed native image viewer; Claude Code uses
+Read on the image. If viewing is unavailable, report that visual verification
+is incomplete. Never substitute another image provider silently.
 
 ## Scripts
 
@@ -102,18 +115,18 @@ DM Sans font, bold 700 weight for titles, clean minimal design.
 ## Environment Variables
 
 - `GOOGLE_API_KEY` or `GEMINI_API_KEY` - API key (required)
-- `OUTPUT_DIR` - Output directory (default: current directory)
+- `OUTPUT_DIR` - Shell helper only; Python scripts take the output path as an argument
 
 ## Examples
 
 **Infographic:**
 ```bash
-bash scripts/generate.sh "Simple framework diagram with black background. CENTER: 'AI Agents' in large white text. SURROUNDING: 4 icons for Planning, Memory, Tools, Learning. DM Sans font, minimal design." agents_framework.png
+python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "Simple framework diagram with black background. CENTER: 'AI Agents' in large white text. SURROUNDING: 4 icons for Planning, Memory, Tools, Learning. DM Sans font, minimal design." "agents_framework.png"
 ```
 
 **Thumbnail:**
 ```bash
-python3 scripts/generate_thumbnail.py "Professional YouTube thumbnail: bold white text 'DEEP AGENTS' on dramatic black background with subtle blue glow, tech aesthetic" deep_agents_thumb.png
+python3 ".claude/skills/nano-banana-image-generator/scripts/generate_image.py" "Professional YouTube thumbnail: bold white text 'DEEP AGENTS' on dramatic black background with subtle blue glow, tech aesthetic" "deep_agents_thumb.png" --aspect-ratio "16:9"
 ```
 
 ## Completion Checklist
