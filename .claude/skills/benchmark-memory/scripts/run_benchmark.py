@@ -486,8 +486,10 @@ def run_benchmark(
             search_result = run_search(query, config, snapshot_dir)
 
             if "error" in search_result:
-                print(f"    Error: {search_result['error'][:100]}")
-                continue
+                raise RuntimeError(
+                    f"Search failed for {config_name}/{query_id}: "
+                    f"{search_result['error']}. No row written; fix the search and --resume."
+                )
 
             # Score results
             scored_results = score_results(

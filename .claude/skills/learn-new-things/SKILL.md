@@ -631,10 +631,11 @@ Cycle 2, 5, 8, 11... → Emerging trends (cutting-edge)
 ```
 /learn-new-things
 
-→ Starts 8-hour learning loop
+→ Runs a learning cycle with an 8-hour continuation interval
 → Auto-selects topic based on gaps
 → Runs research → extract → connect
-→ Schedules next cycle in 8 hours
+→ Reports next cycle scheduled only after the Step 11 scheduling confirmation
+→ Otherwise reports continuation unscheduled
 ```
 
 ### Example 2: Specific Topic, Faster Cycle
@@ -650,11 +651,12 @@ Cycle 2, 5, 8, 11... → Emerging trends (cutting-edge)
 ### Example 3: Check Status
 
 ```
-cat resources/learn-new-things-log.md
+# Set learning_ref to the branch or commit reported by the latest cycle.
+git show "${learning_ref}:resources/learn-new-things-log.md"
 
 → See cycles completed, topics covered
 → Review error history
-→ Check next scheduled cycle
+→ Check the cycle response or configured scheduler for confirmed next execution
 ```
 
 ### Example 4: Stop Learning
@@ -768,7 +770,7 @@ git branch -r --merged main | grep "learning/" | xargs -I {} git push origin --d
 │       │                                                       │   MAIN    │ │
 │       │                                                       └─────┬─────┘ │
 │       │                                                             │       │
-│       └─────────────────────SLEEP 8hrs──────────────────────────────┘       │
+│       └──────────────────CONFIRMED NEXT CYCLE──────────────────────┘       │
 │                                                                             │
 └────────────────────────────────────────────────────────────────────────────┘
 
@@ -780,7 +782,7 @@ Each cycle:
 5. Discover connections to existing notes
 6. Commit to learning/YYYY-MM-DD-topic branch
 7. Push branch, create Pull Request
-8. Return to main, schedule next cycle
+8. Return to main; confirm scheduling or report continuation unscheduled
 
 Continuous learning → Ever-expanding knowledge base
 PRs enable formal review → Selective merging via GitHub

@@ -296,6 +296,12 @@ observed behavior, not enforced native tool isolation. All fixture file hashes
 were preserved. Future CLI versions and administrator-managed configurations
 require their own capability checks.
 
+Runner regressions cover both search errors and failed judgments: either stops
+before recording a successful measurement, retains earlier successful rows and
+leaves the failed query retryable with `--resume`. An all-failed search does not
+report benchmark completion or create a successful CSV row. This failure handling
+uses stubbed search/judge responses with the real metrics, CSV and resume code.
+
 For `self-diagnostic`, the corrected command regression preserved all fixture
 file hashes, including learning state. Subshell dependency checks preserved the
 working directory; nontracking search returned valid empty results, and the

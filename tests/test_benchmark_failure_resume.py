@@ -73,5 +73,38 @@ class BenchmarkFailureResumeTests(unittest.TestCase):
                     runner.run_benchmark([], {"queries": []}, Path(temp), output, resume=True)
             self.assertEqual(output.read_text(), legacy)
 
+    def test_search_failure_stops_and_resume_retries(self):
+        for ids in (("retry",), ("good", "retry")):
+            with self.subTest(ids=ids), tempfile.TemporaryDirectory() as temp:
+                output = Path(temp) / "results.csv"
+                queries = {"queries": [{"id": q, "query": q, "category": "test"}
+                                       for q in ids]}
+                broken = True
+                calls = []
+                def search(query, config, snapshot):
+                    calls.append(query)
+                    if broken and query == "retry":
+                        return {"error": "Snapshot data not found", "results": []}
+                    return {"results": [{"title": "note", "content": "excerpt"}]}
+                def execute(resume=False):
+                    return runner.run_benchmark(
+                        [{"name": "test"}], queries, Path(temp), output,
+                        judge_runtime="codex", judge_model="test", delay=0, resume=resume)
+                log = io.StringIO()
+                with patch.object(sys, "path", [str(SCRIPTS)] + sys.path), patch("score_results.LLMJudge") as judge, patch.object(runner, "run_search", side_effect=search), contextlib.redirect_stdout(log):
+                    judge.return_value.score.return_value = {"score": 3, "reasoning": "match"}
+                    with self.assertRaisesRegex(RuntimeError, "Search failed.*test/retry"):
+                        execute()
+                    self.assertNotIn("Benchmark Complete", log.getvalue())
+                    self.assertEqual(judge.return_value.score.call_count, len(ids) - 1)
+                    before = output.read_text() if output.exists() else ""
+                    self.assertEqual([r["query_id"] for r in csv.DictReader(io.StringIO(before))], list(ids[:-1]))
+                    broken = False
+                    calls.clear()
+                    execute(resume=True)
+                    self.assertEqual(calls, ["retry"])
+                    self.assertTrue(output.read_text().startswith(before))
+                    self.assertEqual([r["query_id"] for r in csv.DictReader(io.StringIO(output.read_text()))], list(ids))
+
 if __name__ == "__main__":
     unittest.main()
