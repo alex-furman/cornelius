@@ -445,6 +445,15 @@ def run_benchmark(
         with open(output_path) as f:
             reader = csv.DictReader(f)
             for row in reader:
+                # Older runners serialized failed judgments as negative scores.
+                # Do not silently treat those rows as completed measurements.
+                if any(float(value) < 0 for column, value in row.items()
+                       if column and column.startswith("result_")
+                       and column.endswith("_score") and value):
+                    raise ValueError(
+                        "Existing CSV contains negative judgment scores; preserve "
+                        "it as failure evidence and rerun with a new output path."
+                    )
                 key = f"{row['config_name']}|{row['query_id']}"
                 completed.add(key)
         print(f"Resuming: {len(completed)} runs already completed")
@@ -488,6 +497,16 @@ def run_benchmark(
                 judge=judge,
                 delay=delay,
             )
+
+            # A partially judged ranking is not a valid benchmark measurement.
+            # Fail before metrics or CSV so --resume retries the whole query.
+            for rank, scored in enumerate(scored_results, 1):
+                if scored.get("score_error") or scored["relevance_score"] < 0:
+                    error = scored.get("score_error") or "negative judgment score"
+                    raise RuntimeError(
+                        f"Judgment failed for {config_name}/{query_id} at rank "
+                        f"{rank}: {error}. No row written; fix the judge and --resume."
+                    )
 
             # Compute metrics
             scores = [r["relevance_score"] for r in scored_results]

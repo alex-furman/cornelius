@@ -107,11 +107,12 @@ frontmatter is Claude configuration, not Codex permission enforcement.
 | --- | --- |
 | `insight-extractor` | Required fresh child for everyday personal capture; notes, provenance and changelog artifacts |
 | `local-brain-search`, `connection-finder` | Native search/graph interfaces and any consuming workflow's read/write constraints |
-| `auto-discovery`, `document-insight-extractor`, `vault-manager` | Discovery, external-source capture and CRUD boundaries; later-slice qualification |
-| `thinking-partner` | Conversation delegation and continuation; later slice |
-| `research-specialist` | Web, Gemini and Apollo capabilities where configured; later slice |
-| `diagram-generator` | Chart MCP capabilities and image artifacts; later slice |
-| `epub-chapter-extractor` | Ebook MCP capabilities and chapter artifacts; later slice |
+| `document-insight-extractor` | Bounded local-text capture with native extraction; see advanced workflow evidence below |
+| `auto-discovery`, `vault-manager` | Discovery and CRUD boundaries; no general specialist qualification |
+| `thinking-partner` | Native conversation delegation and same-child continuation; see `talk` evidence below |
+| `research-specialist` | Web, Gemini and Apollo capabilities where configured; external dependency qualification pending |
+| `diagram-generator` | Chart MCP capabilities and image artifacts; external dependency qualification pending |
+| `epub-chapter-extractor` | Ebook MCP capabilities and chapter artifacts; external dependency qualification pending |
 
 ### Known dependency and contract limits
 

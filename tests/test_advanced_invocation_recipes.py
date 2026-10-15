@@ -81,6 +81,23 @@ class InvocationRecipes(unittest.TestCase):
         result=subprocess.run(["bash","-c",block+'\ntest -f .claude/agents/diagram-generator.md'],cwd=self.root,env=self.env,capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
+    def test_diagnostic_direct_checks_keep_missing_models_offline(self):
+        wrapper = self.root / "resources/local-brain-search/run_search.sh"
+        wrapper.write_text("#!/bin/sh\n"
+                           'test "$HF_HUB_OFFLINE" = 1 || exit 91\n'
+                           'test "$TRANSFORMERS_OFFLINE" = 1 || exit 92\n'
+                           'test "$PYTHONDONTWRITEBYTECODE" = 1 || exit 93\n'
+                           'echo "uncached model unavailable offline" >&2\nexit 7\n')
+        block = next(b for b in blocks("self-diagnostic") if '"consciousness"' in b)
+        env = dict(self.env)
+        for name in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "PYTHONDONTWRITEBYTECODE"):
+            env.pop(name, None)
+        result = subprocess.run(["bash", "-e", "-c", block], cwd=self.root,
+                                env=env, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 7, result.stderr)
+        self.assertIn("uncached model unavailable offline", result.stderr)
+        self.assertFalse(self.log.exists(), "Do not continue after a missing prerequisite")
+
     def test_diagnostic_direct_retrieval_does_not_track(self):
         block=next(b for b in blocks("self-diagnostic") if '"consciousness"' in b)
         tree = ast.parse((ROOT / "resources/local-brain-search/connections.py").read_text())

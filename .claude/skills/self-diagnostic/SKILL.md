@@ -80,6 +80,8 @@ test -f "Brain/04-Output/Articles/ARTICLE-INDEX.md" && echo "PASS: Article Index
 Verify external dependencies are installed:
 
 ```bash
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONDONTWRITEBYTECODE=1
+
 # Test 2.1: Python available
 python3 --version 2>/dev/null && echo "PASS: Python3 available" || echo "FAIL: Python3 not found"
 
@@ -165,7 +167,12 @@ done
 
 These tests invoke actual skills/commands with READ-ONLY operations. Include
 this constraint in every delegated retrieval request: use `--no-track` for
-search calls; use the existing nontracking connections interface without
+search calls, and set `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1` and
+`PYTHONDONTWRITEBYTECODE=1` for Python/import and retrieval checks. Carry these
+settings into every delegated request. Missing cached model weights mean the
+check is unavailable; never retry online. Offline libraries may create empty
+cache directories, so do not claim every system file stays unchanged.
+Use the existing nontracking connections interface without
 inventing a `--no-track` flag it does not support. Preserve note and learning-state bytes, and do not
 install, rebuild or repair anything. If the workflow cannot honor that mode,
 report the diagnostic as unavailable rather than running a mutating fallback.
@@ -243,6 +250,9 @@ Use the Skill tool to invoke `get-perspective-on` with args "AI agents"
 Tests local brain search scripts directly:
 
 ```bash
+# Keep dependency loading offline and prevent bytecode writes
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONDONTWRITEBYTECODE=1
+
 # Run semantic search
 resources/local-brain-search/run_search.sh "consciousness" --limit 3 --no-track --json
 

@@ -72,7 +72,11 @@ The legacy cost estimator is Claude-only. These are workstation commands:
 **do not spawn either provider CLI inside an agent turn**. On Codex, use native
 child-agent delegation for the in-process option below. Keep the same rubric,
 score fields and existing metrics functions; do not count provider failures as
-valid relevance judgments.
+valid relevance judgments. The runner stops with an error before metrics or CSV
+when any judgment in a query fails. Earlier successful rows remain; after fixing
+the judge, `--resume` retries the whole failed query. Legacy CSVs containing
+negative judgment scores cannot be resumed: preserve them as failure evidence
+and rerun with a new output path.
 
 #### Why `claude -p` fails on Trinity (measured 2026-09-16, retrieval-signal-hierarchy AM-10)
 
