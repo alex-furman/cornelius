@@ -23,7 +23,9 @@ use the Codex mechanics in `docs/CODEX.md`, never an automatic fallback to Claud
 Only the skills listed in `docs/CODEX.md` are included in this Codex path. The
 shared manual also describes other workflows; explain their limitation instead
 of invoking them as if they were supported. For ordinary advice questions, load
-`advise` even when the user has not named a skill.
+`advise`; choices with options and stakes use `decide`, even when the user has
+not named a skill. Reference workflows use the scope and human-review rules in
+`docs/CODEX.md`; illustrative Company paths do not widen an explicit target.
 
 For every retrieval skill, keep the mount selected by `scope-mount` or the
 user's explicit scope through search and file reads. Before reading a result,

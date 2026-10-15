@@ -47,8 +47,8 @@ Resolve the entity note (or take a whole sub-scope) and **read it** to extract i
 A reference note's own precomputed edges cluster tightly with its **siblings** (all engagement notes look alike), and mounting `core,Company/<sub>` lets those siblings crowd out core in the results. So the method that actually surfaces entity→insight bridges is a **theme-seeded search of `core` alone**, using KB-aligned vocabulary — run in **both** modes, because they fail differently:
 ```bash
 # the bridge: which of the user's insights is this entity a live instance of?
-BRAIN_READ_SCOPE=core resources/local-brain-search/run_search.sh "<entity themes, KB vocabulary>" --mode static    --threshold 0.35 --limit 6 --json
-BRAIN_READ_SCOPE=core resources/local-brain-search/run_search.sh "<entity themes, KB vocabulary>" --mode spreading --threshold 0.35 --limit 6 --json
+BRAIN_READ_SCOPE=core resources/local-brain-search/run_search.sh "<entity themes, KB vocabulary>" --mode static    --threshold 0.35 --limit 6 --json --no-track
+BRAIN_READ_SCOPE=core resources/local-brain-search/run_search.sh "<entity themes, KB vocabulary>" --mode spreading --threshold 0.35 --limit 6 --json --no-track
 ```
 **`static` is the primary finder for cross-cluster bridges; `spreading` drifts to the KB's densest hub.** Spreading activation flows toward high-centrality nodes — in this KB the Identity / Dopamine / Eight-Circuit cluster. For an entity whose true theme lives *outside* that cluster (agent architecture, orchestration, GTM — i.e. **most** Company products, agents, and engagements), spreading returns plausible-but-spurious Identity/Dopamine bridges while `static` returns the right ones (validated 2026-07-08: Trinity Cloud, themed "agent orchestration / harness is the constraint / architecture over models" → *"Most AI agents are chatbots with fancy wrappers"* · *MOC - AI and Agents* under `static`; → Identity/Dopamine notes under `spreading`). Only when the entity's theme *is* the dense decision-science/consciousness core do the two agree (Acme Corp's decision-science theme → Decision Making · Prospect Theory · Loss Aversion under both). **Read the candidates and judge whether each insight actually relates to the entity's theme — never take top-k on trust.**
 
@@ -56,7 +56,7 @@ BRAIN_READ_SCOPE=core resources/local-brain-search/run_search.sh "<entity themes
 
 **Query `core` vocabulary, not book-shelf vocabulary.** Concepts like *antifragility / optionality / convexity* live in the **non-core** `Books/` shelf, so they return nothing under a `core` mount — phrase the theme in the core KB's own words (decision science, uncertainty, prospect theory, asymmetric payoff, ergodicity). If you genuinely want to bridge to book-shelf concepts, add `Books` to the mount (`BRAIN_READ_SCOPE=core,Books`).
 
-Optionally also mount the sub-scope (`core,Company/<sub>`) and run `/find-connections` on the entity to make it co-visible in a graph view — but treat the theme-seeded core search as the primary finder. The mounted read is non-pure-core, so it **trains no q-values** (learn-gate holds; verify `data/q_values.json` byte-unchanged as the positive control). If a theme returns nothing above threshold, re-phrase toward the KB's actual concepts rather than lowering rigor.
+Optionally also mount the sub-scope (`core,Company/<sub>`) and run `/find-connections` on the entity to make it co-visible in a graph view — but treat the theme-seeded core search as the primary finder. Mixed reads can train core hits under the current per-note learn-gate. Preserve this workflow's no-learning contract by passing `--no-track` to every search, including composed searches; verify `data/q_values.json` is byte-unchanged. If a theme returns nothing above threshold, re-phrase toward the KB's actual concepts rather than lowering rigor.
 
 ### Step 3 — Frame the bridges (entity → insight)
 

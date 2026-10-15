@@ -84,9 +84,20 @@ Ask user:
 2. **Skip** - Review again later (note stays in place)
 3. **Delete** - Remove entirely (rare, for duplicates/errors)
 
-### Codex Review Context
+### Review Context
 
-In Codex, follow `docs/CODEX.md` for keeping the presented candidate path and full-file SHA-256 in the existing review context. Re-read and compare before a later decision: changed content/path or a missing baseline requires a fresh presentation. Keep this bookkeeping out of ordinary decision wording. Unattended tasks present candidates without mutating them; authenticated chat may continue the review even when the runtime uses `codex exec`. Preserve the additional Delete confirmation below. This is a freshness check, not an authorization token or an atomic lock.
+When presenting a candidate, retain its resolved path and full-file SHA-256 in
+the current conversation. Before any later promotion, refinement or deletion,
+validate the path against the configured vault, re-read the file and compare
+its digest. Changed content/path or a missing review baseline requires a fresh
+presentation and decision. Never replace a changed file with remembered text.
+Keep this bookkeeping out of ordinary decision wording; the preview alone is
+not a freshness check. An explicitly approved refinement belongs to that decision.
+
+Use the runtime's authenticated user conversation for decisions. Unattended
+tasks present candidates without mutating them. Preserve the additional Delete
+confirmation below. This is a freshness check, not an authorization token or an
+atomic lock. Codex's native interaction details remain in `docs/CODEX.md`.
 
 ### Step 3: Handle Promotion
 

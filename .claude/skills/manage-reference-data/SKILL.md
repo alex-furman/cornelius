@@ -99,14 +99,18 @@ BRAIN_READ_SCOPE=core,<Scope> resources/local-brain-search/run_connections.sh --
 # or auto-discovery / connection-finder with the same env var
 ```
 
-Unset, the scope stays absent from every reader. The mounted (non-pure-core) read trains no q-values — verify `data/q_values.json` is byte-unchanged after a mounted discovery pass (existing learn-gate; this is the positive safety control).
+Unset, the scope stays absent from every reader. The current per-note learn-gate
+never trains reference hits; core hits in a mixed read can still train. Verify
+that reference identifiers do not enter `data/q_values.json`. If a discovery
+pass must leave learning state unchanged, use the search wrapper's `--no-track`
+option rather than relying on the mixed mount.
 
 ---
 
 ## Acceptance (matches Phase 6 in SCOPE-IMPLEMENTATION-PLAN.md)
 
-1. `BRAIN_READ_SCOPE` unset → reference notes absent from recall/search/connections; `q_values.json` byte-unchanged.
-2. `=core,<Scope>` → entities surface and link to core notes via wiki-links; the mounted read trains no q-values.
+1. `BRAIN_READ_SCOPE` unset → reference notes absent from recall/search/connections; core hits retain normal learning behavior.
+2. `=core,<Scope>` → entities surface and link to core notes via wiki-links; reference hits never train q-values, while core hits retain normal learning behavior.
 3. Editing a note in place + reindex re-embeds it and drops the old content (content-hash diff).
 4. Reference notes never appear in `--hubs` / lifecycle / tension output (non-core, fingerprint-excluded), and are never crystallized.
 

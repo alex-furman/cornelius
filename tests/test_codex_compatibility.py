@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS = {
     "start-here", "quick-search", "recall", "search-vault", "find-connections",
     "advise", "extract-insights", "graduate-insights", "refresh-index",
-    "analyze-kb",
+    "analyze-kb", "first-run", "decide", "manage-reference-data",
+    "ref-query", "ref-audit", "ref-ingest", "ref-refresh", "ref-reconcile",
+    "ref-supersede", "ref-bridge",
 }
 
 

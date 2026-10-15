@@ -35,7 +35,7 @@ Safe to run repeatedly: every step checks before it acts.
 
 ## Process
 
-Work from the agent root (the folder that holds `Brain/` and `resources/`). Keep every Bash call short (under 60 s): long installs run detached and are polled, so the platform's stall watchdog never fires.
+Work from the agent root (the folder that holds `Brain/` and `resources/`). Run long installs in a foreground call with streaming output, as Step 2 requires. Do not detach an installation from its owning execution.
 
 ### Step 1 - Is a bootstrap already running or done?
 
@@ -80,12 +80,12 @@ cd resources/local-brain-search && timeout 120 ./run_daemon.sh start
 ### Step 5 - Verify with one smoke search
 
 ```bash
-cd resources/local-brain-search && BRAIN_READ_SCOPE=core,books,document-insights ./run_search.sh "decision under uncertainty" --limit 3 --json 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('results',d); print(len(r),'results'); [print('-', x.get('title') or x.get('note') or x.get('path')) for x in r[:3]]"
+cd resources/local-brain-search && BRAIN_READ_SCOPE=core,books,document-insights ./run_search.sh "decision under uncertainty" --limit 3 --json --no-track 2>/dev/null | python3 -c "import sys,json; d=json.load(sys.stdin); r=d.get('results',d); print(len(r),'results'); [print('-', x.get('title') or x.get('note') or x.get('path')) for x in r[:3]]"
 ```
 
 (The scope is widened on purpose: the engine's default read scope is `core`, your own notes, which is nearly empty on a fresh copy; the seed lives in the reading pile. `/recall` and `/advise` mount the wider scope themselves.)
 
-Three titles → the engine, the index and the seed are all there. Zero results → the index was not rebuilt (go back to Step 4) or the daemon is serving the old one (reload it). An import error → Step 2 did not finish.
+Three titles → the engine, the index and the seed are all there. Zero results can mean the query is below the similarity threshold or outside the selected scope; inspect the index/daemon status and try a known in-scope note title before diagnosing a stale index. An import error → Step 2 did not finish.
 
 Also confirm the orb data exists: `ls -la resources/agent-visualization/data.json` (on Trinity, `.trinity/setup.sh` copies it from the seed at boot; locally the Brain Orb does not apply).
 
@@ -103,11 +103,26 @@ Brain Orb data : present | n/a
 Try next       : /recall <topic>   ·   /advise <a problem you are weighing>   ·   /decide <a choice with options>
 ```
 
-If `--verify-only` was passed, run Steps 1, 2 (check only), 3 (status only), 5 and 6 and change nothing.
+For `--verify-only`:
+
+- Run Steps 1, 2 (check only), 3 (read the existing manifest only), 5 and 6.
+  Preserve notes, index, learning state, dependencies and daemon state.
+- For Python/import and smoke-search checks, set `HF_HUB_OFFLINE=1`,
+  `TRANSFORMERS_OFFLINE=1` and `PYTHONDONTWRITEBYTECODE=1`. The smoke search's
+  `--no-track` disables learning, but does not prevent a missing model download.
+  If weights are not cached, report the missing prerequisite; do not retry online.
+- Do not follow failure branches into installation, index rebuild, daemon
+  start/reload or marker writes.
+- Do not run `run_daemon.sh status`: it deletes stale PID files. If needed,
+  read `daemon.pid` without cleaning it up and make a bounded read-only request
+  to `http://127.0.0.1:${BRAIN_DAEMON_PORT:-7437}/health`. A PID alone does not
+  prove the daemon responds.
+- Offline libraries may create empty cache directories; do not claim that
+  verification leaves every system file unchanged.
 
 ## Refusals and limits
 
-- Never run the install in the foreground of a single Bash call; it would exceed the stall watchdog and look like a hang.
+- Never detach the install from its owning execution; keep foreground output streaming and report failures.
 - Never delete or rebuild the venv when the import check passes.
 - If the machine has under ~1.2 GB free (`free -m`), say so before installing: the install may be killed and the install should be retried after stopping other containers.
 - Does not touch the vault, the git state, or any credential.

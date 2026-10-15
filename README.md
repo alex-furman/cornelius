@@ -21,7 +21,8 @@ Trinity supplies what a compounding brain needs and a laptop does not: always-on
 
 Cornelius works standalone in Claude Code for exploration and development. **It is meant to be run on Trinity** - see [Deploy to Trinity](#recommended-deploy-to-trinity-for-autonomous-operation) below.
 
-**Using Codex?** An opt-in core-workflow integration is described in
+**Using Codex?** An opt-in integration for everyday memory, decisions and
+reference workflows is described in
 [Codex Support](docs/CODEX.md), including verification and runtime-dependent
 limits. Claude Code remains the default; the wider feature catalog below is
 not a claim of full Codex parity.
@@ -472,7 +473,7 @@ A directed, mode-aware dependency graph layered on top of Local Brain Search. Ev
 |------|---------|
 | [QUICKSTART.md](QUICKSTART.md) | 5-minute setup |
 | [INSTALL.md](INSTALL.md) | Detailed installation & troubleshooting |
-| [docs/CODEX.md](docs/CODEX.md) | Codex setup, core workflows & verification limits |
+| [docs/CODEX.md](docs/CODEX.md) | Codex setup, everyday workflows & verification limits |
 | [EXAMPLES.md](EXAMPLES.md) | Sample notes, MOCs, workflows |
 | [FOLDER-STRUCTURE.md](FOLDER-STRUCTURE.md) | Vault organization guide |
 | [MCP-SETUP.md](MCP-SETUP.md) | MCP server configuration |

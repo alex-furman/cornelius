@@ -60,6 +60,12 @@ One block, before any retrieval:
 
 Same fast-path discipline as `/advise` - no subagents, static search, one parallel batch. **Read role: reasoning** (contract: `scope-mount`): two passes per term, `core` as the spine and the reasoning mount as the evidence layer; run the `scope-mount` trigger check first and append `,company` / `,thinkers` / `,Books/<slug>` to the wide pass on a hit.
 
+An explicit narrower scope applies to both passes, the conditional canon lookup
+in Step 1, and all follow-up reads. If core is excluded, omit the core hubs and
+report the Attractor Check unavailable. Resolve note IDs against the current
+vault and the eligible paths from `search-vault`'s Keyword Search recipe; an
+imported absolute path, link or tool-round target never widens the selected mount.
+
 ```bash
 BRAIN_READ_SCOPE=core                          resources/local-brain-search/run_search.sh "[domain term 1]" --limit 3 --json
 BRAIN_READ_SCOPE=core,Books,document-insights  resources/local-brain-search/run_search.sh "[domain term 1]" --limit 5 --json

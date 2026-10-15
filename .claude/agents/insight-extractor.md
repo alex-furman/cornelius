@@ -578,7 +578,7 @@ Use this output for both the filename and the session timestamp.
 
 ### Step 2: Create Dated Changelog File
 
-Create a NEW file at: `$VAULT_BASE_PATH/Changelogs/CHANGELOG - Insight Extraction Session YYYY-MM-DD.md`
+Create a NEW file at: `$VAULT_BASE_PATH/05-Meta/Changelogs/CHANGELOG - Insight Extraction Session YYYY-MM-DD.md`
 
 **File naming examples:**
 - `CHANGELOG - Insight Extraction Session 2025-10-25.md`

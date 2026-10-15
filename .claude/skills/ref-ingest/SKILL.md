@@ -123,7 +123,7 @@ Content-hash detection → a changed note triggers a **full FAISS rebuild** (min
   BRAIN_READ_SCOPE=core,Company resources/local-brain-search/run_search.sh "<entity>" --limit 5 --json   # present
   resources/local-brain-search/run_search.sh "<entity>" --limit 5 --json                                  # absent (core default)
   ```
-- **Learn-gate held:** `md5 resources/local-brain-search/data/q_values.json` is byte-identical before and after (a mounted read trains nothing).
+- **Learn-gate held:** reference identifiers never enter `data/q_values.json`; core hits in a mixed read can still train. Use `--no-track` for a verification search that must leave learning state byte-unchanged.
 - **Audit trail:** the note has a new `## Change Log` line; the body is the current truth (no append-only drift); `as_of` = today.
 - **No duplicate:** exactly one note exists for the entity (`grep -ril "<name>" Brain/Company/` returns one canonical file).
 
