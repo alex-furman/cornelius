@@ -107,15 +107,14 @@ Parse:
 
 ### Step 3: Scan KB for New Notes
 
-Run LBS search for each watch_query:
+Run LBS search for each watch_query from the repository root:
 
 ```bash
-cd $PROJECT_ROOT
 # --no-track: autonomous perception layer; scans must NOT train q-values (scope-primitive learning hygiene)
 # BRAIN_READ_SCOPE=<wide>: perception must SEE non-core material (new captures in 00-Inbox, Document
 #   Insights, per-book scopes in Books, thinking files in 05-Meta, article drafts in 04-Output). Without it the scan fails closed
 #   to core once scope enforcement is on and silently stops perceiving everything outside the fingerprint.
-BRAIN_READ_SCOPE=core,Books,document-insights,meta,inbox,output resources/local-brain-search/run_search.sh "[watch_query]" --limit 20 --mode spreading --no-track 2>/dev/null
+BRAIN_READ_SCOPE=core,Books,document-insights,meta,inbox,output resources/local-brain-search/run_search.sh "[watch_query]" --limit 20 --mode spreading --no-track
 ```
 
 Then find notes modified since the last scan date:

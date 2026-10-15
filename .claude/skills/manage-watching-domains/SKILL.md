@@ -15,7 +15,11 @@ Human-in-the-loop manager for the domain-watch surveillance layer. Handles the f
 - `.claude/skills/domain-watch/SKILL.md` — the autonomous scanning engine (runs daily, perceives and proposes)
 - `.claude/skills/manage-thinking-topics/SKILL.md` — manages the thinking topics that watching domains feed into
 
-**Architecture:** domain-watch perceives → manage-watching-domains activates → incubation-loop analyses
+**Architecture:** domain-watch perceives and auto-activates qualifying signals
+(or injects evidence into an existing active topic); incubation-loop analyses.
+This manager reviews those outcomes and manually activates any remaining
+unactivated proposals through its approval gate. Domain-watch's starvation-floor
+rule remains autonomous; this manager does not add a retrospective approval gate.
 
 ## State Dependencies
 
@@ -60,7 +64,13 @@ For each domain, read `Brain/05-Meta/Watching/[domain-slug].md`. Extract:
 
 Read `Brain/05-Meta/Watching/WATCH-LOG.md`.
 
-Extract all proposals that are not yet marked `**Activated:**`. For each:
+Separate already activated outcomes from proposals awaiting a decision.
+Recognize both `**Activated:**` (manual) and `**Auto-activated:**` markers.
+Also exclude logged starvation-floor activations and evidence injections from
+the pending-proposal list: verify their target against the Thinking Registry
+and topic file. If a marker and target disagree, report the inconsistency rather
+than treating it as permission to create or activate a duplicate.
+For each remaining unactivated proposal:
 - Domain slug
 - Signal level (HIGH/MEDIUM)
 - Scan date
@@ -96,7 +106,7 @@ Extract all proposals that are not yet marked `**Activated:**`. For each:
 - Next domain-watch run: daily at 7am UTC
 ```
 
-If proposals are waiting: **"[N] proposals in Watch Log — run `/manage-watching-domains activate [slug]` to seed into the incubation loop."**
+If unactivated proposals are waiting: **"[N] unactivated proposals in Watch Log — run `/manage-watching-domains activate [slug]` to review one for activation."**
 
 If domains have `last_scan: null`: **"[N] domains have never been scanned — run `/domain-watch` to establish baselines."**
 
@@ -204,7 +214,10 @@ Read `Brain/05-Meta/Watching/WATCH-LOG.md`.
 
 Find the proposal matching the slug argument. If multiple proposals exist for the same domain, show them all and ask which to activate.
 
-If the proposal is already marked `**Activated:**`, warn and stop.
+If the proposal is already marked `**Activated:**` or `**Auto-activated:**`,
+or records a starvation-floor activation or evidence injection into an existing
+topic, show that outcome and stop. Do not activate it again. If its recorded
+target is missing, report the inconsistency without recreating it automatically.
 
 Extract from the proposal:
 - Proposed central question

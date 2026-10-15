@@ -54,6 +54,12 @@ class InvocationRecipes(unittest.TestCase):
                         calls=self.run_block(block)
                         self.assertIn("run_brain_graph.sh",calls[-1]["tool"])
 
+    def test_domain_watch_search_runs_from_root_without_project_root(self):
+        block = next(b for b in blocks("domain-watch") if '"[watch_query]"' in b)
+        call = self.run_block(block)[-1]
+        self.assertEqual(call["scope"], "core,Books,document-insights,meta,inbox,output")
+        self.assertEqual(call["argv"], ["[watch_query]", "--limit", "20", "--mode", "spreading", "--no-track"])
+
     def test_failed_search_remains_visible_and_stops_recipe(self):
         wrapper = self.root / "resources/local-brain-search/run_search.sh"
         wrapper.write_text('#!/bin/sh\necho "fixture search unavailable" >&2\nexit 9\n')
