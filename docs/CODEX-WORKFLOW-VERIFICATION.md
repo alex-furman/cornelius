@@ -51,9 +51,9 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, 17 advanced entries,
-six shared contracts and 18 workflows without qualified discovery entries**.
-The 37 exposed entries have the bounded support described here and in
+The inspected tree has **61 skills: 20 everyday entries, 21 advanced entries,
+six shared contracts and 14 workflows without qualified discovery entries**.
+The 41 exposed entries have the bounded support described here and in
 [CODEX.md](CODEX.md); exposure does not establish full workflow parity.
 Shared contracts remain required reads rather
 than additional Codex discovery aliases:
@@ -68,11 +68,12 @@ than additional Codex discovery aliases:
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
 The following groups inventory all 35 workflows beyond the everyday entries.
-Exactly 17 now have discovery links: `dialectic`, `extract-document-insights`,
+Exactly 21 now have discovery links: `dialectic`, `extract-document-insights`,
 `synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
 `scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
 `propagate-change`, `epub-chapter-extractor`, `multi-format-book-extractor`,
-`think-about-it`, `incubation-loop`, `ai-crystallize` and `update-changelog`.
+`think-about-it`, `incubation-loop`, `ai-crystallize`, `update-changelog`,
+`manage-thinking-topics`, `integrate-recent-notes`, `update-dashboard` and `brain-merge`.
 The other names remain dependencies or unqualified workflows; wrapper fixes
 alone do not expose them.
 
@@ -220,6 +221,10 @@ a clean official-image startup test.
 | `think-about-it`, `incubation-loop` | Explicit qualification seeded a synthetic topic, ran one ACH incubation move and one freeform lens pass without endorsement. A separate operator-seeded six-pass state advanced through one observed seventh pass and Weave; repeat preserved all files | Seeded history is not six observed prior passes or natural convergence. No full multi-cycle or long-running scheduled qualification |
 | `ai-crystallize` | Native draft from an explicitly seeded converged topic used segregated `ai-inferred` output; repeat invocation skipped the existing draft and preserved source topic/registry state | Seeded convergence, not proof that the loop naturally reaches convergence; no human endorsement or permanent-note promotion |
 | `update-changelog` | Native execution used the configured `./Brain` root, edited only its changelog, preserved prior text byte-for-byte and recorded actual same-session work | Alternate absolute root not separately run |
+| `manage-thinking-topics` | Native topic seeding and same-thread manual crystallization honored separate destination/draft gates and a declined write; later explicit approval saved the reviewed report and changed only the named source/registry, preserving other hashes | Operator-seeded convergence and explicit nonendorsement constraints. No stale-input/occupied-destination refusal, permanent-note update, retirement, interrupted multi-file recovery or indexing qualification |
+| `integrate-recent-notes` | Native seven-note assessment matched actual unique-neighbor counts: six well-connected and one partially connected; only the canonical report was added, with existing notes and learning-state hashes unchanged | Report-only suggestions, not automatic linking or source-note edits; no isolated-note positive case in this fixture |
+| `update-dashboard` | Native output at the intended Trinity path matched all 17 supplied numeric values, signed/zero trends and report date; missing metrics and narrative remained unavailable. Official validator accepted every widget; source hashes stayed unchanged | Read-only synthetic input mount and explicit no-invention constraints. No frontend rendering/API delivery or alternate output-root qualification |
+| `brain-merge` | Native preview preserved files; later exact-file approval copied unchanged provenance/content, indexed only the target and preserved pre-existing files. Repeat changed nothing | Read-only source mount and explicit scope constraints. No reverse/bidirectional merge, stale-preview refusal, symlink/race defense, batch recovery, post-index search or graph-bootstrap qualification |
 | Unexposed watching workflows | After explicit qualification authorization, seeded a domain and ran one local baseline scan with real nontracking searches; four unique matching notes recorded, external signals marked unavailable and no proposal created | Existing active topic prevented starvation-floor activation. No external-signal, later-scan autoactivation or full watching qualification; no discovery entries added |
 
 Deterministic Git recipe tests cover clean/dirty starts, rebase conflicts,
@@ -240,7 +245,7 @@ completed configuration/query and preserved the CSV. This does not qualify a
 large sweep, empirical ranking quality or native in-agent judging; future CLI versions
 and administrator-managed configurations require their own capability checks.
 
-Deterministic tests cover all 37 discovery links and the changed recipes;
+Deterministic tests cover all 41 discovery links and the changed recipes;
 passing them is not full slice-two acceptance. The invocation-recipe tests
 cover existing wrappers, paths with spaces, diagnostic directory preservation
 and the actual connections argument parser. Visible-error/stop behavior was

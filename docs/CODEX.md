@@ -37,7 +37,7 @@ results, approval boundaries and remaining qualification limits.
 
 ## Advanced Workflows
 
-Seventeen additional entries use the same canonical procedures. Their supported
+Twenty-one additional entries use the same canonical procedures. Their supported
 boundaries are explicit; discovery does not imply every optional provider or
 runtime environment has been qualified.
 
@@ -60,6 +60,10 @@ runtime environment has been qualified.
 | `incubation-loop` | One analytical move on a seeded topic, preserving uncertainty and human endorsement boundaries |
 | `ai-crystallize` | Segregated `ai-inferred` draft from an already-converged topic, with repeat-run deduplication and source state preserved |
 | `update-changelog` | Session-scoped changelog at the configured vault root, preserving prior text |
+| `manage-thinking-topics` | Topic seeding and reviewed crystallization to a report, with separate destination/draft decisions and decline handling |
+| `integrate-recent-notes` | Report-only integration assessment using actual connection counts, without editing source notes |
+| `update-dashboard` | Report-derived metrics at Trinity’s `/home/developer/dashboard.yaml` path, with unavailable values identified |
+| `brain-merge` | Reviewed exact-file pull into a selected target, target indexing and unchanged repeat |
 
 Natural scheduler delivery, production writer serialization, positive graph
 finding quality, full multi-cycle convergence and all document formats are not established by these checks.

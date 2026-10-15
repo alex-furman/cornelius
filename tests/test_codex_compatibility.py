@@ -22,6 +22,9 @@ SKILLS = {
     "epub-chapter-extractor", "multi-format-book-extractor",
     "ai-crystallize", "think-about-it", "incubation-loop",
     "update-changelog",
+    "manage-thinking-topics",
+    "integrate-recent-notes",
+    "update-dashboard", "brain-merge",
 }
 
 
