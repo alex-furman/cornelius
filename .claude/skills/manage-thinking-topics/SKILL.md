@@ -210,7 +210,7 @@ Verify `status: converged`. If not converged, warn and stop.
 ### Step 2: Search for Existing Notes
 
 ```bash
-python3 resources/local-brain-search/search.py "[central question keywords]" --limit 5 --mode spreading 2>/dev/null
+resources/local-brain-search/run_search.sh "[central question keywords]" --limit 5 --mode spreading
 ```
 
 Check if a permanent note already exists covering this conclusion. If so, note the overlap and ask whether to update it or create a new note.

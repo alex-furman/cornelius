@@ -16,18 +16,21 @@ Mirrors the epub-chapter-extractor pattern for non-EPUB formats.
 - **Scanned PDF OCR fallback**: `requests` (`--with requests`) + a Gemini key in
   `$GEMINI_API_KEY` / `$GOOGLE_API_KEY` (read from `cornelius/.env` if unset)
 - **MOBI / AZW3**: [calibre](https://calibre-ebook.com/download) must be installed
+  for the host platform. On macOS:
   ```bash
   brew install --cask calibre
   ```
 
 ## Single Book
 
+Run from the repository root with `uv` installed; quote input and output paths.
+
 ```bash
-cd $PROJECT_ROOT/.claude/skills/multi-format-book-extractor && \
-uv run --with pymupdf --with requests python extract_book.py "/path/to/book.pdf" [output_dir]
+uv run --with pymupdf --with requests python ".claude/skills/multi-format-book-extractor/extract_book.py" "/path/to/book.pdf" "/path/to/output folder"
 ```
 
-If `output_dir` is omitted, creates a folder named after the file in the same directory.
+Omit the final output-directory argument to create a folder named after the file
+in the same directory. No `PROJECT_ROOT` environment variable is required.
 
 ## Scanned / Image-Only PDFs (auto-OCR)
 
@@ -46,9 +49,8 @@ to **Gemini 2.5 Flash OCR** (`ocr_pdf.py`).
 Run OCR directly (e.g. to tune params or force it):
 
 ```bash
-cd $PROJECT_ROOT/.claude/skills/multi-format-book-extractor && \
-uv run --with pymupdf --with requests python ocr_pdf.py "/path/to/scan.pdf" [output_dir] \
-  [--model gemini-2.5-flash] [--dpi 180] [--pages-per-call 5] [--pages-per-file 20] [--concurrency 6]
+uv run --with pymupdf --with requests python ".claude/skills/multi-format-book-extractor/ocr_pdf.py" "/path/to/scan.pdf" "/path/to/output folder" \
+  --model gemini-2.5-flash --dpi 180 --pages-per-call 5 --pages-per-file 20 --concurrency 6
 ```
 
 ## Batch Extraction (Parallel)
@@ -56,7 +58,7 @@ uv run --with pymupdf --with requests python ocr_pdf.py "/path/to/scan.pdf" [out
 Extract all PDFs, MOBIs, and AZW3s from a directory in parallel:
 
 ```bash
-SKILL="$PROJECT_ROOT/.claude/skills/multi-format-book-extractor"
+SKILL="$PWD/.claude/skills/multi-format-book-extractor"
 UVX="uv"
 DIR="/path/to/books"
 
@@ -65,7 +67,7 @@ for book in "$DIR"/*.{pdf,mobi,azw3}; do
   stem="${book%.*}"
   [ -d "$stem" ] && echo "Skipping: $(basename "$book") (already extracted)" && continue
   echo "Starting: $(basename "$book")"
-  (cd "$SKILL" && $UVX run --with pymupdf --with requests python extract_book.py "$book") &
+  (cd "$SKILL" && "$UVX" run --with pymupdf --with requests python extract_book.py "$book") &
 done
 wait
 echo "All done"
@@ -89,6 +91,6 @@ book-name/
 
 ## After Extraction
 
-```bash
-open /path/to/books/
-```
+Report the absolute output-directory path and files produced. Opening a desktop
+folder is optional and only appropriate when requested: macOS uses `open`, while
+a Linux desktop may provide `xdg-open`. Headless runtimes need neither command.

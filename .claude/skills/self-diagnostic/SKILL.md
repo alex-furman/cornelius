@@ -87,7 +87,7 @@ python3 --version 2>/dev/null && echo "PASS: Python3 available" || echo "FAIL: P
 uv --version 2>/dev/null && echo "PASS: uv available" || echo "FAIL: uv not found"
 
 # Test 2.3: Check Local Brain Search can run (simple test)
-cd resources/local-brain-search && python3 -c "import sqlite3; import json; print('PASS: Core Python modules available')" 2>/dev/null || echo "FAIL: Python modules missing"
+(cd resources/local-brain-search && python3 -c "import sqlite3; import json; print('PASS: Core Python modules available')") 2>/dev/null || echo "FAIL: Python modules missing"
 
 # Test 2.4: Check mermaid-diagram MCP is responsive
 # (Just verify the skill file exists - actual MCP test would require invocation)
@@ -163,7 +163,12 @@ done
 
 ## Functional Tests (Safe Invocations)
 
-These tests invoke actual skills/commands with READ-ONLY operations.
+These tests invoke actual skills/commands with READ-ONLY operations. Include
+this constraint in every delegated retrieval request: use `--no-track` for
+search calls; use the existing nontracking connections interface without
+inventing a `--no-track` flag it does not support. Preserve note and learning-state bytes, and do not
+install, rebuild or repair anything. If the workflow cannot honor that mode,
+report the diagnostic as unavailable rather than running a mutating fallback.
 
 ### Test: /search-vault Command
 
@@ -239,13 +244,13 @@ Tests local brain search scripts directly:
 
 ```bash
 # Run semantic search
-resources/local-brain-search/run_search.sh "consciousness" --limit 3 --json
+resources/local-brain-search/run_search.sh "consciousness" --limit 3 --no-track --json
 
 # Run connections query
 resources/local-brain-search/run_connections.sh --stats --json
 
 # Run hub discovery
-resources/local-brain-search/run_connections.sh --hubs --limit 5 --json
+resources/local-brain-search/run_connections.sh --hubs --json
 ```
 
 **Success criteria:**

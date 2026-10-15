@@ -339,7 +339,12 @@ Calibrate the monks based on what you learned in Phase 1c′:
 
 Spawn Monk A and Monk B as separate subagent sessions so each gets a clean context with full belief commitment.
 
-**Default path (works everywhere, including Trinity containers): the in-process `Task` tool.**
+**Claude Code path (including Trinity containers): the in-process `Task` tool.**
+
+In Codex, use the native child-agent and continuation interfaces described in
+`docs/CODEX.md`. Preserve separate fresh contexts for the monks and keep the
+interview, structural analysis and synthesis in the parent. If required native
+delegation is unavailable, report that limitation rather than running another CLI.
 
 ```
 Task(prompt="[MONK A PROMPT]", subagent_type="general-purpose", run_in_background=true)

@@ -52,8 +52,27 @@ Systematic benchmarking framework to measure retrieval quality, compare configur
 
 | Environment | Judge channel | Status |
 |---|---|---|
-| the user's workstation | Claude Code headless (`claude -p`) | Works - the CLI holds a real, refreshable credential on disk |
+| the user's workstation | Claude Code headless (default), or explicit `--runtime codex` | Requires a working login for the selected CLI; a version check alone does not establish readiness |
 | **Any Trinity container** | **`chat_with_agent` (Trinity MCP), or an in-process `Task` subagent** | **`claude -p` DOES NOT WORK - see below** |
+
+For a workstation with Codex authentication, the existing Python entrypoints accept:
+
+```bash
+python .claude/skills/benchmark-memory/scripts/score_results.py --runtime codex --model MODEL --query "sample query" --note "Sample" --content "synthetic note excerpt"
+python .claude/skills/benchmark-memory/scripts/run_benchmark.py --runtime codex --model MODEL --snapshot SNAPSHOT --query-set QUERIES.json
+```
+
+`--model` is required for Codex; Claude continues to default to `sonnet`.
+Codex ignores user configuration and disables effectful tools and integrations
+(shell, files, web, apps, plugins, hooks and delegation) when scoring untrusted
+excerpts. Internal planning/question tools may remain; these are not data-access
+channels. Administrator-managed policy still applies. Codex uses its native structured
+output file; a failed call remains a scoring error, never a Claude fallback.
+The legacy cost estimator is Claude-only. These are workstation commands:
+**do not spawn either provider CLI inside an agent turn**. On Codex, use native
+child-agent delegation for the in-process option below. Keep the same rubric,
+score fields and existing metrics functions; do not count provider failures as
+valid relevance judgments.
 
 #### Why `claude -p` fails on Trinity (measured 2026-09-16, retrieval-signal-hierarchy AM-10)
 

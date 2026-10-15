@@ -60,9 +60,9 @@ branches_created: []  # e.g., ["learning/2026-02-18-embodied-cognition"]
 
 ---
 
-## STEP 1: Initialize State
+## STEP 1: Read State and Establish Git Ownership
 
-Read or create state file:
+Read existing state without creating or updating it yet:
 
 ```bash
 cat resources/learn-new-things-log.md 2>/dev/null || echo "No existing state"
@@ -72,25 +72,37 @@ Parse arguments:
 - `$ARGUMENTS[0]` - Interval in hours (default: 8)
 - `$ARGUMENTS[1]` - Optional topic (default: auto-select)
 
-If argument is "stop", set `phase: "paused"` and exit.
+If argument is "stop", stop scheduling and report paused; do not modify the
+tracked log or switch branches merely to acknowledge stop.
+
+Before any cycle writes (including state, index refresh and research), verify
+sole-writer ownership for the entire cycle/publication/return interval using
+existing runtime/operator serialization. If uncertain, stop. Require a clean
+`main` branch; do not switch away from another branch automatically, stash/pop,
+reset, discard, or absorb owner work. Run from the repository root:
+
+```bash
+prepare_learning_repository() {
+    local changes branch
+    changes=$(git status --porcelain=v1 --untracked-files=all) || return 1
+    [ -z "$changes" ] || { printf '%s\n' 'Dirty repository; learning stopped.' >&2; return 1; }
+    branch=$(git branch --show-current) || return 1
+    [ "$branch" = main ] || { printf '%s\n' 'Start learning from clean main.' >&2; return 1; }
+    git pull --ff-only origin main || return 1
+    changes=$(git status --porcelain=v1 --untracked-files=all) || return 1
+    [ -z "$changes" ]
+}
+prepare_learning_repository
+```
+
+Any failure stops before the cycle. Report visible errors without repairing or
+suppressing them. Steps 2–3 are read-only until the learning branch is selected.
+Keep cycle counters in the current session until Step 7 writes the branch log;
+completed branch logs remain the durable record for resuming a selected session.
 
 ---
 
 ## STEP 2: Pre-Cycle Preparation
-
-### Ensure Index is Fresh
-
-Check when index was last updated:
-
-```bash
-ls -la resources/local-brain-search/data/brain.faiss
-```
-
-If older than 24 hours, refresh:
-
-```bash
-resources/local-brain-search/run_reindex.sh
-```
 
 ### Check Knowledge Base State
 
@@ -148,6 +160,46 @@ if cycle_num == 2: Strategy C (emerging)
 ```
 
 Document selected topic and rationale.
+
+### Select the Learning Branch Before Any Writes
+
+Build `BRANCH_NAME` as `learning/YYYY-MM-DD-topic-slug` using a sanitized topic
+slug. If that branch already exists, stop and report; never reuse/reset it or
+continue on main. A new explicitly selected unique suffix can identify another
+cycle. Recheck clean main, then create the branch before initializing state,
+refreshing the index, or producing research:
+
+```bash
+[ -n "$BRANCH_NAME" ] || exit 1
+git check-ref-format --branch "$BRANCH_NAME" >/dev/null || exit 1
+case "$BRANCH_NAME" in learning/*) ;; *) exit 1 ;; esac
+[ "$(git branch --show-current)" = main ] || exit 1
+changes=$(git status --porcelain=v1 --untracked-files=all) || exit 1
+[ -z "$changes" ] || exit 1
+git switch -c "$BRANCH_NAME"
+```
+
+Stop on any failure. Once on this branch, initialize the cycle state as needed.
+Track exact files written by each phase, including partial outputs. Keep a
+separate list of ignored generated search/graph/cache files touched by the cycle;
+these are derived local state, not publishable cycle files. Their contents still follow each underlying skill's approval gates;
+this autonomous publication workflow cannot approve endorsed knowledge edits.
+
+### Ensure Index is Fresh
+
+Check when index was last updated:
+
+```bash
+ls -la resources/local-brain-search/data/brain.faiss
+```
+
+If older than 24 hours, refresh:
+
+```bash
+resources/local-brain-search/run_index.sh
+```
+
+
 
 ---
 
@@ -294,88 +346,72 @@ Add entry to `Brain/CHANGELOG.md`:
 
 ## STEP 8: Git Commit & Branch Management
 
-After completing the learning cycle, commit all changes to a dedicated branch, then return to main.
+The learning branch was selected before any writes. Never stash/pop or move
+unfinished results onto main. Complete the cycle log (including branch name and
+success/partial/error outcome) before staging. Inspect all tracked diffs and
+full new-file contents against actual phase writes. Only known cycle-owned
+outputs may be published, including verified partial outputs after a phase
+failure. If ownership, writer exclusion, or an underlying approval is unclear,
+stop publication and preserve every file and the index on this branch.
 
-### Create Branch Name
+### Stage Exact Verified Outputs
 
-Generate branch name from topic and date:
-
-```bash
-# Get current date
-DATE=$(date '+%Y-%m-%d')
-
-# Create topic slug (lowercase, hyphens, no special chars)
-# Example: "Multi-Agent Systems" → "multi-agent-systems"
-TOPIC_SLUG=$(echo "[topic]" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
-
-BRANCH_NAME="learning/${DATE}-${TOPIC_SLUG}"
-```
-
-### Ensure Clean State on Main
-
-Before creating the learning branch, ensure we're on main:
+Populate `job_paths` with exact verified file paths, including deleted paths and
+both sides of a rename. Exclude ignored generated data (including
+`resources/local-brain-search/data/` and `resources/brain-graph/data/`); never
+force-add it. No directory selection, wildcard changelogs, or blanket
+index-data staging. Run this guard before staging and again before committing;
+it rejects any changed or staged file outside that selection without altering
+owner work:
 
 ```bash
-cd $PROJECT_ROOT
-git stash --include-untracked -m "Pre-learning stash $(date '+%Y-%m-%d %H:%M')" 2>/dev/null || true
-git checkout main
-git pull origin main 2>/dev/null || true
-git stash pop 2>/dev/null || true
+python3 - "${job_paths[@]}" <<'PY_GIT'
+import os
+import subprocess
+import sys
+selected = {os.fsencode(path) for path in sys.argv[1:]}
+if not selected or len(selected) != len(sys.argv) - 1:
+    raise SystemExit("Expected a nonempty unique list of cycle-owned paths")
+def paths(*args):
+    return set(filter(None, subprocess.check_output(["git", *args]).split(b"\0")))
+changed = paths("diff", "HEAD", "--name-only", "--no-renames", "-z")
+staged = paths("diff", "--cached", "--name-only", "--no-renames", "-z")
+untracked = paths("ls-files", "--others", "--exclude-standard", "-z")
+if (changed | staged | untracked) - selected:
+    raise SystemExit("Unexpected owner paths; preserve state and stop publication")
+PY_GIT
 ```
 
-### Create and Switch to Learning Branch
+A successful path guard does not establish ownership of bytes: compare the
+fresh full contents/diff and file modes with the retained inspected output,
+including any staged versus working differences. Any change requires another
+inspection; never overwrite an owner's staged version to make a check pass.
+After the guard and content check succeed:
 
 ```bash
-git checkout -b "$BRANCH_NAME"
+[ "${#job_paths[@]}" -gt 0 ] || exit 1
+git --literal-pathspecs add -- "${job_paths[@]}"
+git diff --cached --binary --full-index
 ```
 
-### Stage Learning Results
-
-Stage all files created during this cycle:
+Re-run the guard and verify that the cached patch matches exactly the inspected
+cycle output and no writer has intervened. Write the actual topic/cycle summary
+and runtime attribution to a temporary message file outside the repository:
 
 ```bash
-# Research report
-git add "resources/[Topic-Slug]-Research-*.md"
-
-# Document Insights session folder
-git add "Brain/Document Insights/[Session-Folder]/"
-
-# Changelogs
-git add "Brain/05-Meta/Changelogs/CHANGELOG - *.md"
-git add "Brain/CHANGELOG.md"
-
-# State file
-git add "resources/learn-new-things-log.md"
-
-# Local Brain Search index updates (if any)
-git add "resources/local-brain-search/data/" 2>/dev/null || true
+git commit --file "$commit_message_file"
 ```
 
-### Commit with Descriptive Message
-
-```bash
-git commit -m "$(cat <<'EOF'
-Learning: [Topic] - Cycle [N]
-
-Research & Extraction Session:
-- Topic: [topic]
-- Papers analyzed: [N]
-- Insights extracted: [N]
-- Connections discovered: [N]
-
-Session folder: Brain/Document Insights/[Session-Folder]/
-Research report: resources/[filename]
-
-Generated by /learn-new-things heartbeat
-EOF
-)"
-```
-
-### Push Branch to Remote
+If no changes exist, report that and skip commit/PR creation. If commit fails,
+stop and retain partial output/index on the learning branch. After a successful
+commit, push only this branch:
 
 ```bash
 git push -u origin "$BRANCH_NAME"
 ```
+
+If push fails, stop on the learning branch, report the local commit and failed
+publication, and do not continue into another cycle or pretend it was pushed.
 
 ### Create Pull Request
 
@@ -415,61 +451,39 @@ EOF
 )"
 ```
 
-**Store PR URL** in state file for reference:
+Report the actual PR URL and publication outcome in the cycle response. Do not
+modify the tracked state file after committing merely to record the URL or
+future checkout status: that would dirty main or create uncommitted carryover.
+The committed cycle log remains on the learning branch; use its branch/commit
+reference when resuming rather than assuming it has been merged into main.
 
-```markdown
-## Latest Cycle
-...
-- **Pull Request:** https://github.com/[repo]/pull/[N]
-```
+If PR creation fails, report that the branch was pushed but no PR was created.
+Do not automatically retry or start another cycle. A clean return to main may
+still proceed, but the learning loop stays paused until that outcome is handled.
 
-**If PR creation fails:**
-- Branch still exists on remote
-- PR can be created manually later
-- Continue to next cycle
-
-### Return to Main Branch
+### Return to Main Only with Clean State
 
 ```bash
-git checkout main
+changes=$(git status --porcelain=v1 --untracked-files=all) || exit 1
+[ -z "$changes" ] || exit 1
+git switch main || exit 1
+changes=$(git status --porcelain=v1 --untracked-files=all) || exit 1
+[ -z "$changes" ] || exit 1
 ```
 
-### Verify Clean State
+Git cleanliness does not prove ignored derived data matches main: caches built
+on the learning branch survive checkout. Report that a refresh against main is
+needed before reusing affected search/graph state or starting the next cycle.
+When authorized, use the existing `/refresh-index` procedure and its completion,
+graph and daemon freshness checks; verify the Git tree remains clean afterward.
+Otherwise pause and leave the derived-state limitation explicit. Do not
+force-add, silently delete, or claim branch-derived caches represent main.
+No new cross-branch refresh/recovery service is introduced here.
 
-```bash
-git status
-# Should show: "On branch main, nothing to commit, working tree clean"
-# Or show unrelated pending changes (not from learning cycle)
-```
-
-### Log Branch Info
-
-Update state file with branch information:
-
-```markdown
-## Latest Cycle
-...
-- **Git branch:** learning/YYYY-MM-DD-topic-slug
-- **Branch pushed:** yes/no
-- **Main restored:** yes
-```
-
-### Git Error Handling
-
-**If branch creation fails:**
-- Log error, continue on main
-- Learning results remain uncommitted
-- Flag for manual review
-
-**If push fails:**
-- Branch exists locally
-- Can be pushed manually later
-- Continue to next cycle
-
-**If checkout main fails:**
-- CRITICAL: Do not proceed to next cycle
-- Increment `consecutive_errors`
-- Manual intervention required
+Any unexpected dirty state or checkout failure pauses the loop immediately.
+Preserve the branch, partial outputs and index for review; do not auto-stash,
+reset, discard, or continue on main after a failed branch creation. Report
+actual local branch/commit, remote publication and return status separately.
 
 ---
 
@@ -477,7 +491,7 @@ Update state file with branch information:
 
 ### Check Error Threshold
 
-If `consecutive_errors >= 3` OR git checkout main failed:
+If `consecutive_errors >= 3` OR any Git ownership/preflight/publication/return gate failed:
 
 ```markdown
 ## LEARNING HEARTBEAT PAUSED
@@ -494,11 +508,13 @@ Manual intervention required. Check:
 To resume: `/learn-new-things`
 ```
 
-Set `phase: "error"` and stop.
+Report phase `error` and stop. Preserve Git-failure state without new log writes;
+record non-Git phase failures in Step 7 before publication.
 
 ### Reset on Success
 
-If cycle completes successfully:
+Finalize these counters in Step 7 before publication; do not write them on main
+after returning. If cycle completes successfully:
 - Set `consecutive_errors = 0`
 - Increment `cycles_completed`
 - Add topic to `topics_researched`

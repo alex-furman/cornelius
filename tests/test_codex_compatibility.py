@@ -16,6 +16,10 @@ SKILLS = {
     "analyze-kb", "first-run", "decide", "manage-reference-data",
     "ref-query", "ref-audit", "ref-ingest", "ref-refresh", "ref-reconcile",
     "ref-supersede", "ref-bridge",
+    "dialectic", "extract-document-insights", "synthesize-insights",
+    "get-perspective-on", "talk", "git-commit-push", "scheduled-run",
+    "coherence-sweep", "compute-lifecycle", "detect-tensions", "propagate-change",
+    "epub-chapter-extractor", "multi-format-book-extractor",
 }
 
 

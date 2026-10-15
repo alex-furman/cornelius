@@ -95,6 +95,12 @@ class NonTrackingRecipeTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertIn("--no-track", calls[0]["args"])
 
+    def test_interview_search_uses_supported_limit_and_core_scope(self):
+        calls = self.run_search_recipes("insight-interview", "--mode spreading")
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0]["scope"], "core")
+        self.assertEqual(calls[0]["args"], ["[topic]", "--limit", "15", "--mode", "spreading"])
+
     def test_reference_bridge_searches_are_nontracking(self):
         calls = self.run_search_recipes("ref-bridge", "--mode static")
         self.assertEqual(len(calls), 2)
@@ -103,6 +109,28 @@ class NonTrackingRecipeTests(unittest.TestCase):
         for call in calls:
             self.assertEqual(call["scope"], "core")
             self.assertIn("--no-track", call["args"])
+
+
+class BrainMergeRefreshRecipeTests(unittest.TestCase):
+    def test_each_agent_refreshes_from_its_own_quoted_root(self):
+        skill = (ROOT / ".claude/skills/brain-merge/SKILL.md").read_text()
+        section = skill.split("#### Step 4: Refresh indexes in both agents", 1)[1]
+        recipe = re.search(r"```bash\n(.*?)```", section, re.S).group(1)
+        with tempfile.TemporaryDirectory(prefix="merge roots ") as tmp:
+            roots = [Path(tmp) / "target agent", Path(tmp) / "source agent"]
+            log = Path(tmp) / "refresh.log"
+            for root in roots:
+                script = root / "resources/local-brain-search/run_index.sh"
+                script.parent.mkdir(parents=True)
+                script.write_text('#!/bin/sh\npwd >> "$REFRESH_LOG"\n')
+                script.chmod(0o755)
+            recipe = recipe.replace("[TARGET_AGENT_ROOT]", str(roots[0]))
+            recipe = recipe.replace("[SOURCE_AGENT_ROOT]", str(roots[1]))
+            result = subprocess.run(["bash", "-c", recipe], cwd=ROOT,
+                                    env=dict(os.environ, REFRESH_LOG=str(log)),
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(log.read_text().splitlines(), list(map(str, roots)))
 
 
 if __name__ == "__main__":

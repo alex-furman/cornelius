@@ -26,35 +26,37 @@ Run a full coherence analysis of the knowledge base using the Brain Dependency G
 
 ## Process
 
+Run each command from the repository root. The existing wrapper selects its
+installed environment; no persistent shell directory or `PROJECT_ROOT` is required.
+
 ### Step 1: Check bootstrap status
 
 ```bash
-cd $PROJECT_ROOT/resources/brain-graph
-../local-brain-search/venv/bin/python cli.py status
+resources/brain-graph/run_brain_graph.sh status
 ```
 
 If not bootstrapped, run bootstrap first:
 ```bash
-../local-brain-search/venv/bin/python cli.py bootstrap
+resources/brain-graph/run_brain_graph.sh bootstrap
 ```
 
 ### Step 2: Run coherence sweep
 
 Default (7-day lookback, lifecycle included, no tensions):
 ```bash
-../local-brain-search/venv/bin/python cli.py coherence
+resources/brain-graph/run_brain_graph.sh coherence
 ```
 
 With options:
 ```bash
 # Include tension detection (slower)
-../local-brain-search/venv/bin/python cli.py coherence --tensions
+resources/brain-graph/run_brain_graph.sh coherence --tensions
 
 # Custom lookback period
-../local-brain-search/venv/bin/python cli.py coherence --days 14
+resources/brain-graph/run_brain_graph.sh coherence --days 14
 
 # JSON output
-../local-brain-search/venv/bin/python cli.py coherence --json
+resources/brain-graph/run_brain_graph.sh coherence --json
 ```
 
 ### Step 3: Present results

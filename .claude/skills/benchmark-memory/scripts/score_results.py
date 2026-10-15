@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LLM-as-Judge scoring for benchmark results using Claude Code headless mode.
+LLM-as-Judge scoring using Claude Code (default) or Codex workstation CLI.
 
 Usage:
     python score_results.py --query "What is dopamine?" --note "Dopamine.md" --content "..."
@@ -12,14 +12,15 @@ Scoring scale (0-3):
 - 2: Relevant - Addresses the query
 - 3: Highly Relevant - Directly answers the query
 
-This uses Claude Code's headless mode (claude -p) for scoring, so no separate
-ANTHROPIC_API_KEY is required - it uses your existing Claude Code authentication.
+Uses the selected CLI's existing authentication; no separate API key is required.
+Agent turns must use their native delegation channel, not these subprocesses.
 """
 import argparse
 import json
 import subprocess
 import sys
 import time
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -29,6 +30,15 @@ CONFIGS_DIR = SKILL_DIR / "configs"
 
 # Load judge prompt template
 JUDGE_PROMPT_PATH = CONFIGS_DIR / "judge_prompt.txt"
+
+# Disable effectful built-ins and integrations for untrusted note excerpts.
+# Verified against Codex 0.147.0; unknown flags fail rather than weakening this.
+CODEX_DISABLED_FEATURES = (
+    "shell_tool", "multi_agent", "multi_agent_v2", "apps", "plugins", "hooks",
+    "remote_plugin", "browser_use", "browser_use_external", "computer_use",
+    "view_image", "image_generation", "workspace_dependencies", "goals",
+    "skill_search", "tool_suggest", "code_mode_host", "shell_snapshot",
+)
 
 # JSON schema for structured output
 SCORE_SCHEMA = {
@@ -82,32 +92,39 @@ Return JSON only:
 
 
 class LLMJudge:
-    """LLM-based relevance judge using Claude Code headless mode."""
+    """Relevance judge using the selected authenticated workstation CLI."""
 
     def __init__(
         self,
-        model: str = "sonnet",
+        model: Optional[str] = None,
+        runtime: str = "claude",
     ):
         """Initialize the LLM judge.
 
         Args:
-            model: Model to use - 'sonnet' (default), 'haiku' (fast/cheap), or 'opus'
+            model: Runtime model; defaults to sonnet for Claude, explicit model required for Codex.
+            runtime: Workstation CLI, claude (default) or codex.
         """
-        self.model = model
+        if runtime not in ("claude", "codex"):
+            raise ValueError("runtime must be claude or codex")
+        if runtime == "codex" and not (model and model.strip()):
+            raise ValueError("Codex judging requires an explicit --model")
+        self.runtime = runtime
+        self.model = model or ("sonnet" if runtime == "claude" else None)
         self.prompt_template = load_judge_prompt()
 
-        # Verify claude is available
+        # Verify the selected binary is available (not an authentication check)
         try:
             result = subprocess.run(
-                ["claude", "--version"],
+                [self.runtime, "--version"],
                 capture_output=True,
                 text=True,
                 timeout=10,
             )
             if result.returncode != 0:
-                raise RuntimeError("Claude Code not available")
+                raise RuntimeError(f"{self.runtime} CLI not available")
         except FileNotFoundError:
-            raise RuntimeError("Claude Code CLI not found. Install from: https://claude.com/code")
+            raise RuntimeError(f"{self.runtime} CLI not found")
 
     def score(
         self,
@@ -139,50 +156,75 @@ class LLMJudge:
 
         for attempt in range(retries):
             try:
-                # Call Claude Code in headless mode with JSON schema for structured output
-                # Note: --json-schema requires 2+ turns, so we don't use --max-turns 1
-                schema_json = json.dumps(SCORE_SCHEMA)
-                result = subprocess.run(
-                    [
-                        "claude",
-                        "-p", prompt,
-                        "--model", self.model,
-                        "--output-format", "json",
-                        "--json-schema", schema_json,
-                    ],
-                    capture_output=True,
-                    text=True,
-                    timeout=120,
-                )
-
-                if result.returncode != 0:
-                    raise RuntimeError(f"Claude returned error: {result.stderr}")
-
-                # Parse JSON response
-                response = json.loads(result.stdout)
-
-                # Extract structured output from response
-                if "structured_output" in response:
-                    output = response["structured_output"]
-                elif "result" in response:
-                    # Try parsing result as JSON (may be wrapped in markdown code fences)
-                    result_text = response["result"]
-                    # Strip markdown code fences if present
-                    if result_text.startswith("```"):
-                        lines = result_text.split("\n")
-                        # Remove first line (```json) and last line (```)
-                        lines = [l for l in lines if not l.startswith("```")]
-                        result_text = "\n".join(lines)
-                    try:
-                        output = json.loads(result_text)
-                    except json.JSONDecodeError:
-                        raise ValueError(f"Could not parse result: {response['result'][:100]}")
+                if self.runtime == "codex":
+                    # Workstation only: agent runtimes use native child delegation.
+                    with tempfile.TemporaryDirectory(prefix="benchmark-judge-") as directory:
+                        schema_path = Path(directory) / "schema.json"
+                        output_path = Path(directory) / "result.json"
+                        schema_path.write_text(json.dumps({**SCORE_SCHEMA, "additionalProperties": False}))
+                        command = [
+                            "codex", "exec", "--ephemeral", "--ignore-user-config",
+                            "--sandbox", "read-only", "-c", 'web_search="disabled"',
+                            "--skip-git-repo-check", "--output-schema", str(schema_path),
+                            "--output-last-message", str(output_path), "--json",
+                        ]
+                        for feature in CODEX_DISABLED_FEATURES:
+                            command.extend(["--disable", feature])
+                        if self.model:
+                            command.extend(["--model", self.model])
+                        command.append("-")
+                        result = subprocess.run(
+                            command, input=prompt, capture_output=True, text=True,
+                            timeout=120, cwd=directory,
+                        )
+                        if result.returncode != 0:
+                            raise RuntimeError(f"Codex returned error: {result.stderr}")
+                        output = json.loads(output_path.read_text())
                 else:
-                    raise ValueError(f"Unexpected response format: {list(response.keys())}")
+                    # Call Claude Code in headless mode with JSON schema for structured output
+                    # Note: --json-schema requires 2+ turns, so we don't use --max-turns 1
+                    schema_json = json.dumps(SCORE_SCHEMA)
+                    result = subprocess.run(
+                        [
+                            "claude",
+                            "-p", prompt,
+                            "--model", self.model,
+                            "--output-format", "json",
+                            "--json-schema", schema_json,
+                        ],
+                        capture_output=True,
+                        text=True,
+                        timeout=120,
+                    )
+
+                    if result.returncode != 0:
+                        raise RuntimeError(f"Claude returned error: {result.stderr}")
+
+                    # Parse JSON response
+                    response = json.loads(result.stdout)
+
+                    # Extract structured output from response
+                    if "structured_output" in response:
+                        output = response["structured_output"]
+                    elif "result" in response:
+                        # Try parsing result as JSON (may be wrapped in markdown code fences)
+                        result_text = response["result"]
+                        # Strip markdown code fences if present
+                        if result_text.startswith("```"):
+                            lines = result_text.split("\n")
+                            # Remove first line (```json) and last line (```)
+                            lines = [l for l in lines if not l.startswith("```")]
+                            result_text = "\n".join(lines)
+                        try:
+                            output = json.loads(result_text)
+                        except json.JSONDecodeError:
+                            raise ValueError(f"Could not parse result: {response['result'][:100]}")
+                    else:
+                        raise ValueError(f"Unexpected response format: {list(response.keys())}")
 
                 # Validate score
                 score = output.get("score")
-                if score is None or not isinstance(score, int) or score < 0 or score > 3:
+                if score is None or type(score) is not int or score < 0 or score > 3:
                     raise ValueError(f"Invalid score: {score}")
 
                 return {
@@ -198,7 +240,7 @@ class LLMJudge:
                 return {
                     "score": -1,
                     "reasoning": "",
-                    "error": "Timeout waiting for Claude response",
+                    "error": f"Timeout waiting for {self.runtime} response",
                 }
             except json.JSONDecodeError as e:
                 if attempt < retries - 1:
@@ -304,7 +346,7 @@ def estimate_cost(num_scores: int, model: str = "haiku") -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LLM-as-Judge scoring using Claude Code headless mode"
+        description="LLM-as-Judge scoring using a workstation CLI"
     )
     parser.add_argument(
         "--query",
@@ -336,9 +378,8 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="sonnet",
-        choices=["haiku", "sonnet", "opus"],
-        help="Model to use for scoring (default: sonnet for quality)",
+        default=None,
+        help="Judge model (Claude default: sonnet; Codex: explicit model required)",
     )
     parser.add_argument(
         "--delay",
@@ -353,11 +394,19 @@ def main():
         help="Estimate cost for N scores",
     )
 
+    parser.add_argument("--runtime", choices=["claude", "codex"], default="claude",
+                        help="Workstation judge CLI (default: claude)")
     args = parser.parse_args()
+
+    if args.runtime == "codex" and args.estimate:
+        parser.error("Cost estimates are not available for Codex")
+
+    if args.runtime == "codex" and not args.model:
+        parser.error("Codex judging requires --model")
 
     # Cost estimation
     if args.estimate:
-        cost = estimate_cost(args.estimate, args.model)
+        cost = estimate_cost(args.estimate, args.model or "sonnet")
         print(f"Cost estimate for {cost['num_scores']} scores using {cost['model']}:")
         print(f"  Input tokens:  {cost['input_tokens']:,}")
         print(f"  Output tokens: {cost['output_tokens']:,}")
@@ -368,7 +417,7 @@ def main():
 
     # Initialize judge
     try:
-        judge = LLMJudge(model=args.model)
+        judge = LLMJudge(model=args.model, runtime=args.runtime)
     except RuntimeError as e:
         print(f"Error: {e}")
         sys.exit(1)
@@ -389,7 +438,7 @@ def main():
         with open(args.batch) as f:
             items = json.load(f)
 
-        print(f"Scoring {len(items)} items with Claude Code ({args.model})...")
+        print(f"Scoring {len(items)} items with {args.runtime} ({judge.model or 'configured model'})...")
 
         def progress(current, total):
             pct = (current / total) * 100

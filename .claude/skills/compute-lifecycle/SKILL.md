@@ -20,16 +20,18 @@ Computes lifecycle scores (0.0 reflective -> 1.0 generative) for all insight and
 
 ## Process
 
+Run each command from the repository root. The existing wrapper selects its
+installed environment; no persistent shell directory or `PROJECT_ROOT` is required.
+
 ### Step 1: Run lifecycle computation
 
 ```bash
-cd $PROJECT_ROOT/resources/brain-graph
-../local-brain-search/venv/bin/python cli.py lifecycle
+resources/brain-graph/run_brain_graph.sh lifecycle
 ```
 
 For JSON output:
 ```bash
-../local-brain-search/venv/bin/python cli.py lifecycle --json
+resources/brain-graph/run_brain_graph.sh lifecycle --json
 ```
 
 ### Step 2: Present transitions

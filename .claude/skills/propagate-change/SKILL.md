@@ -20,16 +20,18 @@ When a note is substantially edited, this skill computes which downstream notes 
 
 ## Process
 
+Run each command from the repository root. The existing wrapper selects its
+installed environment; no persistent shell directory or `PROJECT_ROOT` is required.
+
 ### Step 1: Run propagation
 
 ```bash
-cd $PROJECT_ROOT/resources/brain-graph
-../local-brain-search/venv/bin/python cli.py propagate "<NOTE_NAME>"
+resources/brain-graph/run_brain_graph.sh propagate "<NOTE_NAME>"
 ```
 
 Optional: specify change magnitude (0.0-1.0) for partial changes:
 ```bash
-../local-brain-search/venv/bin/python cli.py propagate "<NOTE_NAME>" --magnitude 0.5
+resources/brain-graph/run_brain_graph.sh propagate "<NOTE_NAME>" --magnitude 0.5
 ```
 
 ### Step 2: Present affected notes
@@ -44,7 +46,7 @@ For each affected note, explain:
 
 If the user wants details on any affected note:
 ```bash
-../local-brain-search/venv/bin/python cli.py inspect "<NOTE_NAME>"
+resources/brain-graph/run_brain_graph.sh inspect "<NOTE_NAME>"
 ```
 
 ## When to Use

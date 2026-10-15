@@ -142,13 +142,12 @@ Rotate through this sequence. Position = `run_count mod 6`:
 
 ### Step 4: Run KB Search for Evidence
 
-Use Local Brain Search to find relevant notes:
+Use Local Brain Search to find relevant notes. Run these commands from the repository root:
 
 ```bash
-cd $PROJECT_ROOT
 # --no-track: this is an autonomous loop; its reads must NOT train q-values (scope-primitive learning hygiene)
-python3 resources/local-brain-search/search.py "[central question]" --limit 8 --mode spreading --no-track 2>/dev/null
-python3 resources/local-brain-search/search.py "[leading hypothesis]" --limit 5 --mode spreading --no-track 2>/dev/null
+resources/local-brain-search/run_search.sh "[central question]" --limit 8 --mode spreading --no-track
+resources/local-brain-search/run_search.sh "[leading hypothesis]" --limit 5 --mode spreading --no-track
 ```
 
 **Environment note (Trinity container):** the bare `python3 .../search.py` form fails on hosts without system-level `faiss` (`ModuleNotFoundError: No module named 'faiss'`) - e.g. the Trinity scheduled-run container. Use the wrapper `./resources/local-brain-search/run_search.sh "[query]" [same flags]` instead; it routes through the running daemon (or a venv fallback) and honors `BRAIN_READ_SCOPE` (defaults fail-closed to `core`). Same flags apply (`--mode static|spreading`, `--threshold`, `--no-track`, `--limit`).

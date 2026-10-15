@@ -30,13 +30,32 @@ Ensures scheduled playbooks on Trinity stay in sync with the GitHub repository.
 
 ## Process
 
-### Step 1: Pull Latest Changes
+### Step 1: Require a Clean, Quiescent Repository
+
+Use this wrapper only when the repository has one writer for the whole
+pull/playbook/commit/push interval. Verify the existing runtime/operator
+serialization; different scheduled start minutes do not establish this. If
+another writer may be active or ownership is unclear, stop and report rather
+than adding a lock service or guessing which files belong to this job.
+
+Reject staged, unstaged **and untracked** owner work before pulling. A successful
+`git pull --rebase` alone does not prove a clean tree. Do not stash, reset,
+delete, stage or commit pre-existing owner changes to make the check pass.
 
 ```bash
-git pull --rebase
+require_clean_tree() {
+    local changes
+    changes=$(git status --porcelain=v1 --untracked-files=all) || return 1
+    if [ -n "$changes" ]; then
+        printf '%s\n' 'Repository is dirty; scheduled run stopped.' >&2
+        return 1
+    fi
+}
+require_clean_tree && git pull --rebase && require_clean_tree
 ```
 
-If conflicts, abort and log error. Do NOT run the playbook on a dirty tree.
+Any failure stops the wrapper before the playbook. If a rebase conflicts, report
+it; do not run the playbook, resolve conflicts automatically or discard files.
 
 ### Step 2: Run the Playbook
 
@@ -66,17 +85,38 @@ git status --porcelain
 
 If no changes, skip to completion.
 
-### Step 4: Commit Changes
+### Step 4: Commit Only This Playbook's Changes
+
+Compare the complete status and diff with the playbook's actual writes,
+including partial output if it failed. Inspect new files as well as tracked
+diffs. If an unexpected file or another writer appears, stop Git publication
+and report the ambiguity; preserve every file and the index. A clean start is
+not proof that every later file belongs to the playbook.
+
+List the exact job-owned file paths, including both paths for a rename and
+tracked deletion paths. Stage only that list with literal path handling:
 
 ```bash
-git add -A && git commit -m "$(cat <<'EOF'
-Scheduled: $ARGUMENTS $(date '+%Y-%m-%d %H:%M')
+# Populate this array with the exact verified job-owned files, not a directory
+# or a glob. Pass filenames as quoted data.
+[ "${#job_paths[@]}" -gt 0 ] || exit 1
+git --literal-pathspecs add -- "${job_paths[@]}"
+git diff --cached --name-status --no-renames
+git diff --cached --binary --full-index
+```
 
-Automated execution via /scheduled-run
+Before committing, verify every staged path and byte belongs to that output
+list, and that no file changed during inspection. Otherwise stop. Do not use
+`git add -A`. Preserve the existing partial-output policy, but never manufacture
+missing human approval for an underlying playbook's gated action.
 
-Co-Authored-By: Claude <noreply@anthropic.com>
-EOF
-)"
+Write the commit message to a temporary file outside the repository. Use the
+actual playbook name and current timestamp, not an unexpanded quoted heredoc.
+Attribute it to the runtime/model actually executing the task; do not add a
+Claude identity to a Codex execution or invent an email/trailer. Then commit:
+
+```bash
+git commit --file "$commit_message_file"
 ```
 
 ### Step 5: Push to Remote
@@ -90,7 +130,7 @@ git push
 | Error | Recovery |
 |-------|----------|
 | Pull fails (conflicts) | Abort, log error, do not run playbook |
-| Playbook fails | Still attempt commit/push of partial changes |
+| Playbook fails | Still attempt commit/push of verified job-owned partial changes, only while the clean-start, sole-writer and approval boundaries hold; otherwise stop and preserve them |
 | Push fails | Log error, changes remain local |
 
 ## Autonomy Guide
@@ -107,7 +147,7 @@ git push
 | AI Crystallize | `/scheduled-run ai-crystallize` | `30 7 * * 1` | 30m | Mon 07:30 — AI synthesis of converged topics → `AI Crystallizations/` (ai-inferred) |
 | Git Sync | (raw git) | `45 */6 * * *` | 10m | :45 every 6h — redundant with scheduled-run git hygiene **[disabled]** |
 
-**Spacing rule:** incubation holds the hourly `:00` slot; every other job runs at `:30` of an **odd** hour (domain-watch only runs even hours), so no two jobs start in the same minute and their git commits never collide. Timeouts match each skill's work budget (the 15-min platform default is too short for FAISS rebuilds and multi-domain scans).
+**Spacing rule:** incubation holds the hourly `:00` slot; every other job runs at `:30` of an **odd** hour (domain-watch only runs even hours), so no two jobs start in the same minute. This does **not** prevent overlap or Git collisions: a 45-minute run can overlap the next half-hour job. The sole-writer check above still applies. Timeouts match each skill's work budget (the 15-min platform default is too short for FAISS rebuilds and multi-domain scans).
 
 **What should NOT be scheduled (requires human judgment):**
 
@@ -126,6 +166,7 @@ The coherence sweep is the one weekly artifact that earns automation - it's a Mo
 
 ## Completion Checklist
 
+- [ ] Repository was clean (including untracked files) and sole-writer ownership established
 - [ ] Git pull completed successfully
 - [ ] Playbook executed
 - [ ] Changes detected and committed (if any)

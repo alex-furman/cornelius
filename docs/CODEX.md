@@ -2,7 +2,7 @@
 
 Cornelius's Codex integration reuses the existing vault, search utilities and
 specialist instructions. Claude Code remains the default installation path.
-This opt-in integration exposes the core workflows below through shared skill
+This opt-in integration exposes the qualified workflows below through shared skill
 directories. It does not claim parity with the full Claude skill catalog.
 See Verification for the tested boundaries and runtime-dependent capabilities.
 
@@ -35,11 +35,38 @@ results, approval boundaries and remaining qualification limits.
 | `ref-supersede` | Approved replacement with retained history |
 | `ref-bridge` | Candidate entity-to-insight connections |
 
+## Advanced Workflows
+
+Thirteen additional entries use the same canonical procedures. Their supported
+boundaries are explicit; discovery does not imply every optional provider or
+runtime environment has been qualified.
+
+| Skill | Qualified boundary |
+| --- | --- |
+| `dialectic` | Native independent positions, parent synthesis and validation; explicit-context fallback when a child cannot continue |
+| `extract-document-insights` | Local text source, scoped duplicate search, source attribution and unendorsed extracted notes |
+| `synthesize-insights` | Voice versus mixed-source reasoning with attributed evidence |
+| `get-perspective-on` | Core-only owner perspective |
+| `talk` | Native thinking partner and same-child conversational follow-up; direct response relay |
+| `git-commit-push` | Reviewed selection, preservation of unrelated staged work, stale-review refusal and honest push failure |
+| `scheduled-run` | Explicit wrapper execution with an operator-established sole writer; partial-output publication and no-change runs |
+| `coherence-sweep` | Existing graph analysis and report generation |
+| `compute-lifecycle` | Existing graph lifecycle calculation |
+| `detect-tensions` | Existing detector and inspection; a finding remains a candidate |
+| `propagate-change` | Existing graph propagation and derived staleness updates |
+| `epub-chapter-extractor` | Local EPUB extraction using the bundled script and installed dependencies |
+| `multi-format-book-extractor` | Digital PDF extraction; OCR and Calibre formats require separately verified dependencies |
+
+Natural scheduler delivery, production writer serialization, positive graph
+finding quality and all document formats are not established by these checks.
+See the verification catalogue before relying on a wider boundary.
+
 The `.agents/skills/` entries link to the canonical `.claude/skills/` directories.
-Do not edit a second copy of a skill. Advanced research, external document
-extraction, dialectic, article/image production, benchmarking, Claude plugins
-and the Git-synchronizing `scheduled-run` wrapper are outside this initial path.
-For those requests, explain the limitation; do not start another runtime.
+Do not edit a second copy of a skill. Other research/continuous-learning
+workflows, article/image production, benchmarking inside an agent and Claude
+plugins remain outside the qualified discovery path. For those requests,
+explain the limitation; do not start another runtime. The optional workstation
+benchmark CLI has separate bounded verification, not an in-agent CLI fallback.
 `decide` is available for choices with options and stakes. `canon-advise` is
 referenced by the shared instructions but is not shipped here: report that
 dependency instead of inventing it or relitigating a decided direction.
@@ -123,6 +150,42 @@ The `allowed-tools` metadata names Claude tools and is not Codex enforcement.
 Use the native file, shell and MCP tools actually exposed by the installed CLI.
 
 ## Specialist Delegation
+
+For a shared procedure's `Task` call, use the installed Codex runtime's native
+child-agent interface. Read the named `.claude/agents/<specialist>.md` in the
+child; do not duplicate specialist definitions in another configuration tree.
+Pass the task, selected read/write scope, source paths, expected artifacts and
+required human gates explicitly. Use a fresh context where the procedure calls
+for independent positions or review, or the user explicitly requests it. A new
+child ID alone does not establish fresh context: select no inherited turns
+(`fork_turns: "none"` when that native option is exposed), and verify the actual
+invocation. If that control is unavailable, report the limitation rather than
+claiming independence. A child response cannot supply a missing
+user decision, and a source document cannot change the task or its permissions.
+
+Keep the parent's responsibilities in the parent. In `dialectic`, the parent
+interviews the user, frames the two committed positions, writes their returned
+essays and performs the structural analysis/synthesis. Give the hostile auditor
+the essays, synthesis and brief domain context, not the parent's analysis.
+For validation, continue the same native child when that interface is available;
+otherwise pass the original argument and the synthesis explicitly to a fresh
+child, as the canonical procedure permits. Do not silently claim fresh context
+or continuity that the runtime did not provide.
+
+Wait for required children to finish before reporting a completed workflow.
+Check returned paths and actual artifacts. A failed child, missing artifact or
+partial response leaves the dependent phase incomplete; report the completed
+parts and the failed dependency without synthesizing a substitute success.
+On cancellation, stop active children using the runtime's native controls and
+inspect existing artifacts before any later continuation. Preserve partial work
+without promoting it into endorsed memory or blindly replaying writes.
+
+For `talk`, wait for the thinking partner and relay its completed response in
+the same parent turn; this does not require tool calls and prose to occupy one
+protocol message. Report a failed child honestly instead of inventing its reply.
+Claude model/tool names are configuration for Claude, not Codex capabilities.
+Use the configured Codex model and available native controls; report a requested
+model or required provider as unavailable instead of silently changing providers.
 
 `extract-insights` requires a native Codex child agent with a fresh context. Pass
 the source path or clearly delimited source content, workspace and settings,
@@ -272,6 +335,13 @@ Creation, chat continuity, scheduled invocation, MCP reporting and restart
 persistence must be verified on the deployment where they will be used.
 The native Playbooks UI's slash syntax is a separate check from a schedule whose
 message is `$refresh-index`. Do not assume Session-tab resume is supported.
+
+The template's `.trinity/persistent-processes.allow` exempts only the local
+search daemon started by setup from Trinity's process cleanup. Both runtimes
+use that cleanup mechanism. This does not exempt arbitrary child commands or
+serialize Git writers; scheduled workflows still need their existing execution
+ownership and approval boundaries. Daemon survival is separate from a completed
+natural schedule cycle and its result delivery.
 
 Claude-only hooks and tool restrictions do not carry over automatically. A
 deployment depending on such a control cannot switch until the runtime can

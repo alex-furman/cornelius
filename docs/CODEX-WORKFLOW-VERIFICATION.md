@@ -51,8 +51,11 @@ must exist before claiming a generic reference workflow works.
 
 ## Remaining catalogue
 
-The inspected tree has **61 skills: 20 everyday entries, six shared contracts
-and 35 later-slice workflows**. Shared contracts remain required reads rather
+The inspected tree has **61 skills: 20 everyday entries, 13 advanced entries,
+six shared contracts and 22 workflows without qualified discovery entries**.
+The 33 exposed entries have the bounded support described here and in
+[CODEX.md](CODEX.md); exposure does not establish full workflow parity.
+Shared contracts remain required reads rather
 than additional Codex discovery aliases:
 
 | Shared contract | Dependency / effect |
@@ -64,9 +67,15 @@ than additional Codex discovery aliases:
 | `changelog-protocol` | Dated specialist logs under `05-Meta/Changelogs/` and brief master log |
 | `elicitation-techniques` | Interview techniques; does not authorize promotion |
 
-All names below are canonical skill directories, **not qualified Codex entries**.
+The following groups inventory all 35 workflows beyond the everyday entries.
+Exactly 13 now have discovery links: `dialectic`, `extract-document-insights`,
+`synthesize-insights`, `get-perspective-on`, `talk`, `git-commit-push`,
+`scheduled-run`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`,
+`propagate-change`, `epub-chapter-extractor` and `multi-format-book-extractor`.
+The other names remain dependencies or unqualified workflows; wrapper fixes
+alone do not expose them.
 
-| Later-slice group | Complete skill inventory | Dependencies and consequential effects to qualify |
+| Advanced group | Complete skill inventory | Dependencies and consequential effects to qualify |
 | --- | --- | --- |
 | Research, conversation and synthesis | `deep-research`, `dialectic`, `extract-document-insights`, `ingest-source`, `synthesize-insights`, `auto-discovery`, `think-about-it`, `get-perspective-on`, `talk`, `insight-interview`, `learn-new-things` | Native children/follow-ups, web/provider tools and extraction interfaces where called; preserve voice versus reasoning scope, unendorsed artifacts and cancellation behavior |
 | Unattended work, Git and maintenance | `scheduled-run`, `git-commit-push`, `incubation-loop`, `domain-watch`, `ai-crystallize`, `manage-thinking-topics`, `manage-watching-domains`, `coherence-sweep`, `compute-lifecycle`, `detect-tensions`, `integrate-recent-notes`, `propagate-change`, `brain-merge`, `update-changelog`, `update-dashboard`, `self-diagnostic` | Scheduler/Skill invocation, local graph engine, Git remote and approval channels; qualify partial writes, conflicts, endorsement gates and actual scheduled cycles |
@@ -188,11 +197,58 @@ sentences and `ai-inferred` provenance. Compare actual file contents and hashes,
 not just the model's summary. This is an observed regression, not a guarantee
 that a language model will always follow instructions.
 
-## Evidence and acceptance status
+## Advanced-workflow qualification in progress
+
+These checks extend the everyday baseline. They use synthetic data and isolated
+fixtures; they do not establish full parity or production deployment. Native
+Codex runs used 0.147.0 with `gpt-5.6-sol`. Cached container dependencies are not
+a clean official-image startup test.
+
+| Workflow / boundary | Observed evidence | Remaining limit |
+| --- | --- | --- |
+| `dialectic` | Native fresh children produced opposing essays, resumed parent synthesis, fresh fallback validators and hostile audit; returned artifacts retained actual child text; recursion awaited a user decision | The initial run was interrupted during unnecessary word-count retries. This proves explicit-summary fallback, not uninterrupted execution, same-child continuation or native cancellation. Observable auditor reads excluded structural analysis, but encrypted task payloads prevent independent verification of its exact prompt |
+| `get-perspective-on`, `synthesize-insights` | Real scoped search; owner voice used core provenance; synthesis labeled encountered evidence separately; all existing note hashes unchanged | Small fixture, chat-only output; no broad-worldview or saved-synthesis qualification |
+| `talk` | Native thinking-partner response relayed directly; a later authenticated turn continued the same child, with scoped retrieval and unchanged note hashes | Initial child inherited parent context; this is not evidence of fresh-context isolation |
+| `extract-document-insights` | One fresh native specialist, real duplicate searches, two encountered-source notes, session/master logs; synthetic evidence and an untested hypothesis remained explicitly distinct; existing note bodies unchanged | Small extraction, no duplicate skipped and no indexing in this scenario; not a large-batch test |
+| Missing document source | A newly spawned native specialist checked the exact missing path and returned source-validation failure; parent reported zero extracted notes/artifacts and existing Brain hashes remained unchanged | Child inherited parent context (`fork_turns: all`), so this is not fresh-context evidence. Missing session name was an additional unmet prerequisite; no successful extraction stages are claimed |
+| `git-commit-push`, `scheduled-run` safety | Native Codex refused unrelated staged work and dirty scheduled start, presented a review without mutation, rejected stale approval, then committed only newly approved bytes. An intentionally rejected local-remote push left the commit local and was reported accurately. Native Claude also passed the two refusal paths | Successful approved commit and stale continuation were not repeated under Claude. No real network push is claimed; sole-writer ownership remains a prerequisite |
+| `scheduled-run` explicit execution | Native Codex ran a mechanical fixture playbook once, published only its verified partial output to a local bare remote after deliberate failure, and reported failure separately from publication. A subsequent no-change run skipped commit/push and preserved both revisions | Manual wrapper invocations with operator-established sole writer, not cron, real maintenance or underlying gated-playbook approval evidence |
+| Graph maintenance | Direct three-note command checks preserved curated enrichments and notes. A later native Codex run completed the documented graph prerequisite/refresh and all four workflows on nine notes/eighteen edges, wrote a coherence report, found an orphan and preserved all Brain hashes | Subsequent measurement found no new lifecycle transition, tension or above-threshold propagation; the propagation target had no outbound edges. No framework-specific lifecycle or multi-hop propagation qualification. Some JSON modes also print progress text |
+| EPUB and digital PDF extraction | Actual bundled scripts preserved chapter order/content, PDF table-of-contents boundaries and no-TOC page chunks; paths containing spaces worked; repeat output was stable | Script execution, not native model orchestration. Reruns overwrite edited generated outputs. Scanned PDF correctly failed without an OCR key; successful OCR and MOBI/AZW3 remain unqualified |
+| Search daemon persistence | Actual official agent-server sweeper retained an exactly allowlisted daemon after the launching session exited; removing the allowlist caused termination. Restored positive control remained healthy for 147 seconds after session exit | Bounded process-lifecycle evidence on cached dependencies; not native CLI detached-child survival, clean-image startup, scheduler delivery or elapsed long-term observation |
+
+Deterministic Git recipe tests cover clean/dirty starts, rebase conflicts,
+literal filenames, selected staging and preserved local commits after push
+failure. They do not prove model adherence to authenticated approval. The
+native stale-review response contained an inaccurate explanatory diff context
+line; actual file reads, digest checks and refusal preserved the correct bytes.
+
+The workstation Codex benchmark path passed independent review and one live
+synthetic scoring request, returning a valid score even when the excerpt
+contained an instruction to read files. Separate offline request capture
+verified an empty tool list for the inspected CLI/model metadata; the benign
+live result alone is not tool-isolation evidence. Seven transport regression
+tests cover defaults, output parsing and failures. Full search-to-CSV benchmark
+execution and native in-agent judging remain unqualified; future CLI versions
+and administrator-managed configurations require their own capability checks.
+
+The reviewed staged candidate passed **69 deterministic tests**, covering all
+33 discovery links. This is not full slice-two acceptance. Six invocation-recipe tests
+cover existing wrappers, paths with spaces, diagnostic directory preservation
+and the actual connections argument parser. Visible-error/stop behavior was
+tested under `bash -e`, not established as unconditional across every executor.
+Optional provider integrations and scheduler acceptance
+choices remain pending. Missing Drive-upload/transcript components, unconfigured
+chart or research services, and image/OCR credentials must remain explicit
+dependencies. Natural scheduled triggering, cancellation, restart and delivery
+require their own isolated platform experiment; manual runs do not substitute
+for those observations.
+
+## Everyday baseline evidence and acceptance status
 
 - Official base `b9bea90`: **13 deterministic tests passed**.
 - Integrated prerequisite `cbb7b18`: **33 deterministic tests passed**.
-- Final staged candidate: **39 deterministic tests passed**, including all
+- Everyday candidate: **39 deterministic tests passed**, including all
   twenty relative discovery links and a clone into a path containing spaces.
   Six new scope/path/nontracking recipe tests exercise executable behavior,
   not model adherence to approval rules.

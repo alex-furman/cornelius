@@ -30,17 +30,19 @@ Scans the knowledge base for productive contradictions: note pairs with high sem
 
 ## Process
 
+Run each command from the repository root. The existing wrapper selects its
+installed environment; no persistent shell directory or `PROJECT_ROOT` is required.
+
 ### Step 1: Run tension detection
 
 Default thresholds (similarity > 0.75, divergence > 0.3). **These are graph-space (chunk-to-chunk) numbers and are NOT comparable to the scores `/recall` or `/search-vault` print** - see `resources/local-brain-search/SIMILARITY-CALIBRATION.md`. **Fixed 2026-09-02 (v1.3):** the detector now queries with each note's first *meaningful* chunk instead of its first chunk (bare frontmatter for 83% of notes) - before that it returned nothing usable for 3 in 4 of those notes, and the graph rebuild did not help because `tension.py` picks its chunk itself. Expect the candidate set to change shape on the first post-fix scan, and treat pairs tracked before 2026-09-02 as suspect (see `SIMILARITY-CALIBRATION.md` -> Trap 3):
 ```bash
-cd $PROJECT_ROOT/resources/brain-graph
-../local-brain-search/venv/bin/python cli.py tensions
+resources/brain-graph/run_brain_graph.sh tensions
 ```
 
 Broader search (more results, lower quality):
 ```bash
-../local-brain-search/venv/bin/python cli.py tensions --similarity 0.70 --divergence 0.2
+resources/brain-graph/run_brain_graph.sh tensions --similarity 0.70 --divergence 0.2
 ```
 
 ### Step 2: Filter false positives, then present synthesis opportunities
@@ -56,7 +58,7 @@ Keep only pairs that assert genuinely **opposing conclusions about the same ques
 ### Step 3: Track existing tensions
 
 ```bash
-../local-brain-search/venv/bin/python cli.py status --json
+resources/brain-graph/run_brain_graph.sh status --json
 ```
 
 Check `tension_count` for total tracked tensions.

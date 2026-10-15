@@ -32,18 +32,42 @@ Comprehensively test the new memory improvements implemented in Local Brain Sear
 | Source | Location | Read | Write | Description |
 |--------|----------|------|-------|-------------|
 | Memory Config | `resources/local-brain-search/memory_config.py` | ✓ | | Central configuration |
-| Q-Values | `resources/local-brain-search/data/q_values.json` | ✓ | | Learned preferences |
-| Usage History | `resources/local-brain-search/data/usage_history.jsonl` | ✓ | | Event tracking |
+| Q-Values | `resources/local-brain-search/data/q_values.json` | ✓ | ✓ | Disposable fixture preferences |
+| Usage History | `resources/local-brain-search/data/usage_history.jsonl` | ✓ | ✓ | Disposable fixture event tracking |
 | FAISS Index | `resources/local-brain-search/data/brain.faiss` | ✓ | | Vector index |
 | Graph | `resources/local-brain-search/data/brain_graph.pkl` | ✓ | | Note graph |
 | Test Report | `resources/memory-test-reports/` | | ✓ | Output location |
 
 ## Prerequisites
 
+- Run only in a disposable copy of an existing frozen synthetic test vault,
+  including its matching index, metadata, graph and learning state. Never run
+  this playbook against the owner's working vault or production learning data.
+  Verify that the copy's Brain and data paths resolve inside the disposable
+  root: do not use symlinks or shared writable mounts back to the source.
+- Isolate the test from any production search daemon (for example, use the
+  existing isolated test container with no production mounts or network).
+  A copied wrapper can otherwise contact the daemon on its default local port.
+  Reuse installed dependencies and cached model weights; missing prerequisites
+  leave the affected checks untested rather than triggering production setup.
+- Start each command block from the disposable vault root. Keep exports and
+  reports within that root; replace the example note IDs and queries with
+  relevant notes from the frozen fixture. Do not invent owner notes to fit tests.
 - Virtual environment activated: `source resources/local-brain-search/venv/bin/activate`
 - FAISS index built: `data/brain.faiss` exists
 - Graph built: `data/brain_graph.pkl` exists
 - Dependencies installed: `pip install -r requirements.txt`
+
+The result-diversity, intent-confidence and latency figures below are historical
+expectations, not guarantees for every fixture or machine. Record actual values
+and deviations; do not claim success merely because commands exit successfully.
+In particular, the stock intent demo reports 50% for "Dopamine", 70% for
+"relationship between identity and belief", and 70% for "patterns across
+neuroscience and AI", below the strict thresholds in the historical table.
+Preserve concrete checks: event records must parse, supported learning events
+must update fixture state according to configuration, and `--no-track` must not
+append usage events. A fixture without suitable hub/ranking contrasts cannot
+qualify those behaviors; report them as untested.
 
 ## Inputs
 
@@ -201,7 +225,7 @@ cd resources/local-brain-search
 ./run_learning.sh top --limit 10
 
 # Export full learning data
-./run_learning.sh export --output /tmp/learning_export.json
+./run_learning.sh export --output data/learning_export.json
 ```
 
 **Expected:**
@@ -235,12 +259,12 @@ AFTER=$(wc -l < data/usage_history.jsonl)
 echo "Events before: $BEFORE, after: $AFTER, new: $((AFTER - BEFORE))"
 
 # Verify event structure
-tail -5 data/usage_history.jsonl | python -m json.tool
+tail -5 data/usage_history.jsonl | python -c 'import json, sys; [print(json.dumps(json.loads(line))) for line in sys.stdin if line.strip()]'
 ```
 
 **Expected:**
-- New events should be logged (5 for limit=5)
-- Events should have: timestamp, note_id, query, query_intent, event_type, position, session_id, mode
+- New events should match the actual returned results (up to 5 for limit=5)
+- Events should have: timestamp, note_id, query, query_intent, event_type, position_in_results, session_id, mode
 
 ---
 
@@ -498,7 +522,9 @@ If tests fail:
 
 1. **Import errors:** Check `requirements.txt` installed in venv
 2. **File not found:** Run `python index_brain.py` to rebuild index
-3. **Learning errors:** Run `./run_learning.sh reset --confirm` to reset
+3. **Learning errors:** Preserve the failed fixture and report first. If a reset
+   is needed, use `./run_learning.sh reset --confirm` only in a new disposable
+   copy after verifying its data paths again. Never reset the owner's data.
 4. **Config errors:** Check `memory_config.py` syntax
 
 ## Related Skills

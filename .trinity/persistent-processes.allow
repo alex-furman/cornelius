@@ -1,0 +1,2 @@
+# Keep the search daemon started by .trinity/setup.sh across execution cleanup.
+*/resources/local-brain-search/daemon.py

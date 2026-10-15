@@ -393,10 +393,11 @@ def run_benchmark(
     query_set: dict,
     snapshot_dir: Path,
     output_path: Path,
-    judge_model: str = "sonnet",
+    judge_model: Optional[str] = None,
     delay: float = 0.5,
     resume: bool = False,
     dry_run: bool = False,
+    judge_runtime: str = "claude",
 ) -> dict:
     """Run full benchmark suite.
 
@@ -405,7 +406,8 @@ def run_benchmark(
         query_set: Query set dict
         snapshot_dir: Path to snapshot directory
         output_path: Path for results CSV
-        judge_model: Model for LLM-as-judge
+        judge_model: Model for LLM-as-judge (runtime default when omitted)
+        judge_runtime: Workstation CLI, claude or codex
         delay: Delay between API calls
         resume: Resume from previous run
         dry_run: Don't actually run, just show plan
@@ -434,7 +436,7 @@ def run_benchmark(
 
     # Initialize judge
     print(f"\nInitializing LLM judge ({judge_model})...")
-    judge = LLMJudge(model=judge_model)
+    judge = LLMJudge(model=judge_model, runtime=judge_runtime)
 
     # Track completed runs for resume
     completed = set()
@@ -557,9 +559,8 @@ def main():
     )
     parser.add_argument(
         "--model",
-        default="sonnet",
-        choices=["haiku", "sonnet", "opus"],
-        help="Model for LLM-as-judge (default: sonnet for quality)",
+        default=None,
+        help="Judge model (Claude default: sonnet; Codex: explicit model required)",
     )
     parser.add_argument(
         "--delay",
@@ -588,6 +589,8 @@ def main():
         help="List available snapshots",
     )
 
+    parser.add_argument("--runtime", choices=["claude", "codex"], default="claude",
+                        help="Workstation judge CLI (default: claude)")
     args = parser.parse_args()
 
     # List snapshots
@@ -609,6 +612,9 @@ def main():
         for c in configs:
             print(f"  - {c['name']}: {c.get('description', '')}")
         return
+
+    if args.runtime == "codex" and not args.model:
+        parser.error("Codex judging requires --model")
 
     # Validate snapshot
     if not args.snapshot:
@@ -650,6 +656,7 @@ def main():
         snapshot_dir=snapshot_dir,
         output_path=output_path,
         judge_model=args.model,
+        judge_runtime=args.runtime,
         delay=args.delay,
         resume=args.resume,
         dry_run=args.dry_run,

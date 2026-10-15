@@ -78,6 +78,7 @@ class TestGitignoreFates(unittest.TestCase):
 
     def test_kit_files_are_not_ignored(self):
         for path in HOOKS + [".trinity/setup.sh", ".trinity/brain-orb/_common.py",
+                             ".trinity/persistent-processes.allow",
                              "resources/agent-visualization/data.seed.json",
                              "resources/agent-visualization/export_data.py"]:
             self.assertFalse(self._ignored(path), f"{path} must be trackable")
