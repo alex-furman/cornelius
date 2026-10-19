@@ -70,6 +70,41 @@ class KeywordRecipeTests(unittest.TestCase):
         note.write_bytes(b"\xff\xfe")
         self.assertEqual(self.names(), {"02-Permanent/Core.md", "02-Permanent/Binary café.md"})
 
+    def test_file_symlinks_are_not_eligible_even_with_allowed_targets(self):
+        outside = Path(self.temp.name) / "Outside.md"
+        outside.write_text("SYNTHETIC_OUTSIDE")
+        targets = {
+            "Allowed alias.md": self.vault / "02-Permanent/Core.md",
+            "Excluded alias.md": self.vault / "Company/people/Person.md",
+            "Outside alias.md": outside,
+            "Broken alias.md": self.vault / "missing.md",
+        }
+        for name, target in targets.items():
+            (self.vault / "02-Permanent" / name).symlink_to(target)
+        self.assertEqual(self.names("core"), {"02-Permanent/Core.md"})
+
+    def test_directory_symlinks_are_not_eligible(self):
+        outside = Path(self.temp.name) / "Outside"
+        outside.mkdir()
+        (outside / "Outside.md").write_text("SYNTHETIC_OUTSIDE")
+        for name, target in {
+            "Allowed": self.vault / "02-Permanent",
+            "Excluded": self.vault / "Company",
+            "Outside": outside,
+        }.items():
+            (self.vault / "02-Permanent" / name).symlink_to(target,
+                                                             target_is_directory=True)
+        self.assertEqual(self.names("core"), {"02-Permanent/Core.md"})
+
+    def test_symlink_vault_root_is_supported(self):
+        alias = Path(self.temp.name) / "Vault alias"
+        alias.symlink_to(self.vault, target_is_directory=True)
+        self.vault = alias
+        result = self.run_recipe("core")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        paths = [Path(path).resolve() for path in json.loads(result.stdout)]
+        self.assertEqual(paths, [alias.resolve() / "02-Permanent/Core.md"])
+
     def test_missing_vault_is_an_error(self):
         self.vault = self.vault / "missing"
         result = self.run_recipe()

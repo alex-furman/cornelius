@@ -28,8 +28,10 @@ of invoking them as if they were supported. For ordinary advice questions, load
 For every retrieval skill, keep the mount selected by `scope-mount` or the
 user's explicit scope through search and file reads. Before reading a result,
 resolve its note ID against the current vault root and check it against the
-eligible paths from `search-vault`'s Keyword Search recipe. Do not follow an
-index's saved absolute path, an out-of-scope link, or an ambiguous note match.
+eligible paths from `search-vault`'s Keyword Search recipe. Read only an
+enumerated path; excluded symlink aliases do not become eligible by resolving
+them to another path. Do not follow an index's saved absolute path, an
+out-of-scope link, or an ambiguous note match.
 If core is excluded, skip core-only fingerprint/hub/bridge calls even when a
 shared skill asks for them; report that context unavailable instead of widening.
 These guards apply to `quick-search`, `recall` and semantic results as well as

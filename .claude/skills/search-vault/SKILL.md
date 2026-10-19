@@ -56,11 +56,17 @@ $ARGUMENTS
    if not BRAIN_PATH.is_dir():
        raise SystemExit(f"Vault not found: {BRAIN_PATH}")
    paths = [str(path) for path in sorted(BRAIN_PATH.rglob("*.md"))
-            if path.is_file()
+            if not path.is_symlink() and path.is_file()
             and in_read_scope(path.relative_to(BRAIN_PATH).as_posix(), read_scope)]
    print(json.dumps(paths, ensure_ascii=False, indent=2))
    PY
    ```
+
+   Note symlinks are excluded, even when their targets are in scope. The
+   recursive enumeration does not descend into directory symlinks; a symlink
+   used as the configured vault root is supported. Do not resolve an excluded
+   alias and treat that alias as eligible. This is a current-filesystem read
+   guard, not a validation of content already stored in the semantic index.
 
    Then use `Grep` only on those exact file paths:
    - Pattern: supplied $ARGUMENTS, passed as data rather than shell code

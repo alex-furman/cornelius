@@ -40,6 +40,11 @@ material must remain attributed, not promoted to the user's views.
 Before reading any semantic result or graph neighbour, resolve its note ID
 against the current vault root and the eligible paths from `search-vault`'s
 Keyword Search recipe; imported absolute index paths are not read targets.
+That recipe excludes note and descendant-directory symlinks, including aliases
+of otherwise eligible notes. Read only an enumerated path; do not substitute an
+excluded alias. This checks current file-read eligibility, not the provenance
+of cached semantic content. Pre-existing indexes may contain content collected
+through symlinks; this integration does not repair or certify that content.
 If the selected mount excludes core, omit core-only fingerprint/hub/bridge
 calls (including recall's third layer) and say that context is unavailable.
 These Codex entry-point guards apply even where a shared skill's example would
@@ -170,9 +175,10 @@ and fixture behavior; it does not run model calls or prove workflow parity.
 Contribution verification:
 
 - Cornelius base `b9bea90`: the unchanged baseline has 13 passing tests; the
-  integrated Codex candidate passes 33 tests covering packaging, executable
+  integrated Codex candidate passes 36 tests covering packaging, executable
   scope recipes and real shell-wrapper transport fixtures. These checks include quoted paths, Unicode
-  queries, encoder failures and unchanged direct-search fallback arguments.
+  queries, encoder failures, unchanged direct-search fallback arguments, excluded
+  note/directory symlinks and a supported symlink vault root.
 - Official Trinity `77d98132`: 221 focused runtime, MCP, factory and subscription
   authentication tests pass. Its actual template-copy command preserves all ten
   relative skill links; its startup instruction block preserves the supplied
